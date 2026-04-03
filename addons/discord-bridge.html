@@ -137,18 +137,53 @@ amcdb.discord.channels.console.enableExecution=<span class="cv2">false</span></p
   </div><div class="divider"></div>
 
   <!-- CONFRONTO -->
-  <div class="section"><div class="sh"><span class="sn">03</span><h2>Confronto rapido</h2></div>
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Differenze tra DiscordSRV e AMCDB</h2></div>
+
+    <p>La distinzione principale non è solo la lista di feature — è il <strong>pubblico a cui si rivolgono</strong>.</p>
+
+    <div class="mods-grid" style="margin-bottom:16px">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:#5865f2"></span>DiscordSRV — potente e configurabile</div>
+        <p>È il bridge più completo per Paper. Pensato per server con una community: supporta il <strong>link account</strong> (ogni giocatore può collegare il proprio account Discord al proprio account MC), la <strong>sincronizzazione dei ruoli</strong> Discord con i gruppi in-game, webhook personalizzati per ogni canale, e un sistema di alert configurabile per quasi ogni evento del server. La configurazione è più articolata ma ha una documentazione ottima. Per un piccolo server tra amici è un po' "overkill", ma funziona benissimo anche in quel contesto.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>AMCDB — leggero e diretto</div>
+        <p>Pensato per chi vuole il bridge funzionante in 5 minuti senza toccare decine di opzioni. Non usa mixins (non modifica il codice di Minecraft direttamente), quindi è molto stabile tra una versione MC e l'altra. Tutto il lavoro viene fatto <strong>off-thread</strong> — zero impatto sulle performance del server. Manca il link account e la sincronizzazione ruoli, ma per un gruppo di amici non servono.</p>
+      </div>
+    </div>
+
     <table>
       <tr><th>Feature</th><th>DiscordSRV (Paper)</th><th>AMCDB (Fabric)</th></tr>
       <tr><td>Chat bidirezionale</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Canale console</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Notifiche morte/avanzamento</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Webhook support</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Link account Discord↔MC</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
-      <tr><td>Sincronizzazione ruoli</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
+      <tr><td>Notifiche morte / avanzamento</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Canale console su Discord</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Webhook (messaggi formattati)</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Link account Discord ↔ MC</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
+      <tr><td>Sincronizzazione ruoli Discord</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
+      <tr><td>Configurazione</td><td style="color:var(--amber)">articolata</td><td style="color:var(--green)">semplice</td></tr>
+      <tr><td>Impatto performance</td><td style="color:var(--amber)">basso</td><td style="color:var(--green)">quasi zero (off-thread)</td></tr>
+      <tr><td>Stabilità tra versioni MC</td><td style="color:var(--amber)">buona</td><td style="color:var(--green)">ottima (no mixins)</td></tr>
       <tr><td>Server-side only</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Leggerezza</td><td style="color:var(--amber)">medio</td><td style="color:var(--green)">molto leggero</td></tr>
+      <tr><td>Supporta 26.1</td><td style="color:var(--amber)">quando Paper supporterà 26.1</td><td style="color:var(--green)">✓ già ora</td></tr>
     </table>
+
+    <div class="ib tip" style="margin-top:14px"><span class="ii">✓</span>
+      <span><strong>Per un server tra amici:</strong> entrambi vanno benissimo. Se usi Fabric scegli AMCDB, se usi Paper scegli DiscordSRV — non c'è un motivo valido per fare il contrario dato che sono ottimizzati per le rispettive piattaforme.</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sh"><span class="sn">04</span><h2>Alternative che esistono</h2></div>
+    <p>Esistono altri bridge, ma non li consiglio come prima scelta per questo setup:</p>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--muted)"></span>Discord Integration (DCIntegration)</div>
+        <p>Interessante perché supporta Fabric, Forge, NeoForge, Paper e Spigot tutto con un unico progetto. Però è in "<strong>life support</strong>" — il maintainer ha dichiarato che gli aggiornamenti arrivano quasi solo da PR della community. Non ancora aggiornato a 26.1.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--muted)"></span>Discord-MC-Chat (DMCC)</div>
+        <p>Alternativa Fabric con feature simili ad AMCDB. Ben mantenuto ma con meno download e community più piccola. Non ancora aggiornato a Minecraft 26.1 al momento.</p>
+      </div>
+    </div>
   </div>
 
   <footer><span>Chat Bridge · DiscordSRV + AMCDB · 2026</span><span>Paper · Fabric · Linux Mint 22.3</span></footer>
