@@ -1,3 +1,4 @@
+```
 GuidaMC/
 ├── index.html          ← Home con selettore
 ├── style.css           ← Stile
@@ -14,3 +15,4 @@ GuidaMC/
     ├── index.html      ← Hub Plugin & Mod
     ├── discord-bridge.html
     └── geyser.html
+```
