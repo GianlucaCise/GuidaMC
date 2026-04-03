@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper 1.21.11 solo systemd — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn" href="../addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="gh">
+    <a class="back-btn" href="../index.html">← Home</a>
+    <div class="tag">Paper 1.21.11 · Solo systemd</div>
+    <h1>Server <span class="ab">Paper 1.21.11</span><br>solo systemd</h1>
+    <p class="subtitle">// Plugin · Java 21 · No panel · Massima leggerezza</p>
+  </header>
+
+  <div class="ib warn" style="margin-bottom:24px"><span class="ii">!</span>
+    <span><strong>Paper non supporta ancora 26.1.</strong> Usa <strong>1.21.11</strong> con Java 21.</span>
+  </div>
+
+  <div class="prereq"><div class="prereq-title">⚙ Prerequisiti</div>
+    <ul><li>Linux Mint 22.3</li><li>sudo</li><li>Java 21</li><li>wget</li><li>Porta 25565</li></ul>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Installa Java 21</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo apt update && sudo apt upgrade -y</span>
+<span class="cc">sudo apt install -y openjdk-21-jre-headless wget</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">02</span><h2>Crea utente e cartella</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo useradd -r -m -d</span> <span class="cpa">/opt/mcserver</span> <span class="cf2">-s /bin/bash</span> <span class="cv2">mcserver</span>
+<span class="cc">sudo mkdir -p</span> <span class="cpa">/opt/mcserver/paper</span>
+<span class="cc">sudo chown -R mcserver:mcserver</span> <span class="cpa">/opt/mcserver</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">03</span><h2>Scarica Paper 1.21.11</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo -u mcserver wget</span> \
+  <span class="cv2">"https://api.papermc.io/v2/projects/paper/versions/1.21.11/builds/latest/downloads/paper-1.21.11-latest.jar"</span> \
+  <span class="cf2">-O</span> <span class="cpa">/opt/mcserver/paper/paper.jar</span>
+
+<span class="cm"># Prima avviata → genera i file</span>
+<span class="cc">sudo -u mcserver bash</span>
+<span class="cc">cd</span> <span class="cpa">/opt/mcserver/paper</span>
+<span class="cc">java -jar paper.jar nogui</span>
+<span class="cc">sed -i</span> <span class="cv2">'s/eula=false/eula=true/'</span> <span class="cpa">eula.txt</span>
+<span class="cc">exit</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">04</span><h2>Service systemd</h2></div>
+    <div class="cfile"><div class="cfn">📄 /etc/systemd/system/mcserver.service</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a">[Unit]
+<span class="cc">Description</span>=<span class="cv2">Paper Minecraft 1.21.11</span>
+<span class="cc">After</span>=<span class="cv2">network.target</span>
+
+[Service]
+<span class="cc">User</span>=<span class="cv2">mcserver</span>
+<span class="cc">WorkingDirectory</span>=<span class="cpa">/opt/mcserver/paper</span>
+<span class="cc">ExecStart</span>=<span class="cv2">/usr/bin/java \
+  -Xms2G -Xmx4G \
+  -XX:+UseG1GC \
+  -XX:+ParallelRefProcEnabled \
+  -XX:MaxGCPauseMillis=200 \
+  -XX:+AlwaysPreTouch \
+  -XX:+DisableExplicitGC \
+  -jar paper.jar nogui</span>
+<span class="cc">Restart</span>=<span class="cv2">on-failure</span>
+<span class="cc">RestartSec</span>=<span class="cv2">10</span>
+
+[Install]
+<span class="cc">WantedBy</span>=<span class="cv2">multi-user.target</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo systemctl daemon-reload</span>
+<span class="cc">sudo systemctl enable mcserver.service</span>
+<span class="cc">sudo systemctl start mcserver.service</span>
+<span class="cc">sudo journalctl -u mcserver.service -f</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">05</span><h2>Plugin e port forwarding</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash — installa un plugin</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/Plugin.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/Plugin.jar</span>
+<span class="cc">sudo systemctl restart mcserver.service</span></pre></div>
+    <table style="margin-top:12px"><tr><th>Porta</th><th>Uso</th></tr>
+      <tr><td>25565 TCP</td><td>Server Minecraft</td></tr></table>
+    <div class="ib tip" style="margin-top:10px"><span class="ii">✓</span><span>IP statico via DHCP reservation → forwarda 25565. IP dinamico? Usa <strong>DuckDNS</strong>.</span></div>
+    <div class="ib note"><span class="ii">i</span><span>Vuoi GeyserMC? → <a href="../addons/geyser.html" style="color:var(--green)">Guida GeyserMC</a> · Discord bridge? → <a href="../addons/discord-bridge.html" style="color:var(--green)">Guida DiscordSRV</a></span></div>
+  </div>
+
+  <footer><span>Paper 1.21.11 · systemd · 2026</span><span>Java 21 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

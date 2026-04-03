@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeyserMC + Floodgate — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn active" href="index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Plugin & Mod</a>
+    <div class="tag">GeyserMC · Floodgate · Crossplay Java ↔ Bedrock</div>
+    <h1>Crossplay con<br><span class="ag">GeyserMC</span> + <span style="color:var(--amber)">Floodgate</span></h1>
+    <p class="subtitle">// Paper 1.21.11 o Fabric 1.21.11 · Porta UDP 19132</p>
+  </header>
+
+  <div class="section"><div class="sh"><span class="sn">00</span><h2>Cosa sono e come funzionano</h2></div>
+    <div class="mods-grid" style="margin-bottom:14px">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>GeyserMC</div>
+        <p>Traduttore di protocollo Java ↔ Bedrock. I client Bedrock (mobile, console, Windows Edition) si connettono su una porta UDP separata, Geyser traduce tutto e li fa apparire come normali giocatori Java. I giocatori Java non notano nulla.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Floodgate</div>
+        <p>Companion di Geyser. Senza Floodgate i giocatori Bedrock avrebbero bisogno di un account Java a pagamento. Con Floodgate basta il loro account Microsoft/Xbox. Va installato sempre insieme a Geyser.</p>
+      </div>
+    </div>
+    <div class="ib warn"><span class="ii">!</span>
+      <span><strong>Geyser supporta solo Minecraft Java 1.21.11</strong> — non ancora 26.1. Usa Paper 1.21.11 o Fabric 1.21.11 per il crossplay. Tieni d'occhio geysermc.org per aggiornamenti.</span>
+    </div>
+    <div class="ib note" style="margin-top:8px"><span class="ii">i</span>
+      <span>Geyser <strong>non funziona su Vanilla</strong> — serve obbligatoriamente Paper o Fabric.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Installazione su Paper (plugin)</h2></div>
+    <p>Scarica entrambi i JAR da <strong>geysermc.org/download</strong> (versione Spigot/Paper):</p>
+    <div class="cb"><div class="ch"><span class="cl">bash — senza Crafty</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/Geyser-Spigot.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/floodgate-spigot.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/*.jar</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Avvia il server una volta — Geyser e Floodgate generano i config. Poi fermalo per configurarli.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Installazione su Fabric (mod)</h2></div>
+    <p>Scarica da <strong>geysermc.org/download</strong> le versioni Fabric. Richiede anche <strong>Fabric API</strong>.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/Geyser-Fabric.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/floodgate-fabric.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/*.jar</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Configurazione Geyser (config.yml)</h2></div>
+    <div class="mods-grid" style="margin-bottom:12px">
+      <div class="mod-card"><div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Paper</div><p><code>plugins/Geyser-Spigot/config.yml</code></p></div>
+      <div class="mod-card"><div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>Fabric</div><p><code>config/Geyser-Fabric/config.yml</code></p></div>
+    </div>
+    <div class="cfile"><div class="cfn">📄 config.yml — sezioni chiave</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a">bedrock:
+  address: <span class="cv2">0.0.0.0</span>
+  port: <span class="cv2">19132</span>        <span class="cm"># porta UDP da aprire sul router</span>
+  clone-remote-port: <span class="cv2">false</span>
+
+remote:
+  address: <span class="cv2">127.0.0.1</span>  <span class="cm"># stessa macchina</span>
+  port: <span class="cv2">25565</span>
+  auth-type: <span class="cv2">floodgate</span>  <span class="cm"># ← FONDAMENTALE: cambia da "online"</span>
+
+passthrough-motd: <span class="cv2">true</span>
+show-coordinates: <span class="cv2">true</span></pre></div>
+    <div class="ib warn"><span class="ii">!</span><span><code>auth-type: floodgate</code> è la riga più importante — senza questa i Bedrock avrebbero bisogno di un account Java.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">04</span><h2>Configurazione Floodgate</h2></div>
+    <p>Path: <code>plugins/floodgate/config.yml</code> (Paper) · <code>config/floodgate/config.yml</code> (Fabric)</p>
+    <div class="cfile"><div class="cfn">📄 floodgate/config.yml</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a"><span class="cm"># Prefisso nel nome giocatori Bedrock — li distingue nella whitelist</span>
+username-prefix: <span class="cv2">"."</span>
+
+<span class="cm"># Permette di linkare account Bedrock a account Java</span>
+player-link:
+  enabled: <span class="cv2">true</span>
+  enable-global-linking: <span class="cv2">true</span></pre></div>
+    <div class="ib note"><span class="ii">i</span><span>Il prefisso <code>.</code> davanti al nome è normale — lo vedrai nella whitelist come <code>.NomeGiocatore</code>.</span></div>
+    <p style="margin-top:14px">Floodgate genera un <strong>key.pem</strong> — copialo nella cartella Geyser:</p>
+    <div class="cb"><div class="ch"><span class="cl">bash — Paper</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">plugins/floodgate/key.pem plugins/Geyser-Spigot/</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">bash — Fabric</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">config/floodgate/key.pem config/Geyser-Fabric/</span></pre></div>
+    <div class="ib warn"><span class="ii">!</span><span><strong>Non distribuire mai il key.pem.</strong> Chi lo ottiene può impersonare giocatori Bedrock sul tuo server.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">05</span><h2>Whitelist per giocatori Bedrock</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">Console Minecraft</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">whitelist add</span> <span class="cv2">.NomeGiocatoreBedrock</span>
+<span class="cc">whitelist list</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Il punto davanti è obbligatorio. Es: <code>.GigiGamer99</code> (gamertag Xbox esatto).</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">06</span><h2>Port forwarding — porta extra UDP</h2></div>
+    <table>
+      <tr><th>Porta</th><th>Protocollo</th><th>Uso</th></tr>
+      <tr><td>25565</td><td>TCP</td><td>Client Java</td></tr>
+      <tr><td>19132</td><td><strong>UDP</strong></td><td>Client Bedrock via Geyser</td></tr>
+    </table>
+    <div class="ib warn" style="margin-top:12px"><span class="ii">!</span><span>La porta Bedrock usa <strong>UDP</strong> — assicurati di selezionare il protocollo giusto nel router.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">07</span><h2>Verifica e comandi utili</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">Server di test GeyserMC</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Java Edition</span>  IP: <span class="cv2">test.geysermc.org</span>  Porta: <span class="cv2">25565</span>
+<span class="cm"># Bedrock Edition</span> IP: <span class="cv2">test.geysermc.org</span>  Porta: <span class="cv2">19132</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">Console Minecraft</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">geyser</span> <span class="cv2">list</span>      <span class="cm"># giocatori Bedrock connessi</span>
+<span class="cc">geyser</span> <span class="cv2">version</span>   <span class="cm"># versione Geyser attiva</span>
+<span class="cc">geyser</span> <span class="cv2">reload</span>   <span class="cm"># ricarica config senza riavviare</span></pre></div>
+  </div>
+
+  <footer><span>GeyserMC + Floodgate · 2026</span><span>Paper/Fabric 1.21.11 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

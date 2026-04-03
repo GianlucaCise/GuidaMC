@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric 26.1 + Crafty — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn" href="../addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="gh">
+    <a class="back-btn" href="../index.html">← Home</a>
+    <div class="tag">Fabric 26.1 · Crafty Controller</div>
+    <h1>Server <span class="ap">Fabric 26.1</span><br>+ Crafty</h1>
+    <p class="subtitle">// Mod loader · Java 25 · Pannello web</p>
+  </header>
+
+  <div class="ib note" style="margin-bottom:24px"><span class="ii">i</span>
+    <span>Fabric è ideale per mod di ottimizzazione (Lithium, Starlight) e QoL. Non supporta plugin Bukkit/Spigot — per quello usa Paper. Fabric Loader 0.18.4 supporta già 26.1.</span>
+  </div>
+
+  <div class="prereq"><div class="prereq-title">⚙ Prerequisiti</div>
+    <ul><li>Linux Mint 22.3</li><li>sudo</li><li>Java 25</li><li>Python 3.10+</li><li>Git</li><li>wget</li><li>Porta 25565</li></ul>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn p">01</span><h2>Installa Java 25 e dipendenze</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo apt update && sudo apt upgrade -y</span>
+<span class="cc">sudo apt install -y openjdk-25-jre-headless git python3 python3-dev wget</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Installa Crafty Controller</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">git clone https://gitlab.com/crafty-controller/crafty-installer-4.0.git</span>
+<span class="cc">cd crafty-installer-4.0 && chmod +x install_crafty.sh</span>
+<span class="cc">sudo ./install_crafty.sh</span>  <span class="cm"># branch: master</span>
+<span class="cc">sudo systemctl enable crafty.service</span>
+<span class="cc">sudo systemctl start crafty.service</span></pre></div>
+    <p>Pannello su <strong>https://localhost:8443</strong></p>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">03</span><h2>Scarica il Fabric Server Launcher</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">wget</span> <span class="cv2">"https://meta.fabricmc.net/v2/versions/loader/26.1/latest/stable/server/jar"</span> \
+  <span class="cf2">-O</span> <span class="cpa">~/fabric-server-launch.jar</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Scarica sempre l'ultima versione stabile del Fabric Loader (attualmente 0.18.4) per Minecraft 26.1.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">04</span><h2>Crea il server Fabric in Crafty</h2></div>
+    <p><strong>Create a Server</strong> → Minecraft Java → <strong>Custom JAR</strong> → carica <code>fabric-server-launch.jar</code> → Build Server!</p>
+    <div class="ib warn"><span class="ii">!</span><span>Prima avviata: Fabric scarica i file necessari, poi si ferma per la EULA. Apri <code>eula.txt</code> da Crafty → <code>false</code>→<code>true</code> → riavvia.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">05</span><h2>JVM flags — ZGC per 26.1</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">JVM flags — Fabric 26.1</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cf2">-Xms2G -Xmx4G
+-XX:+UseZGC
+-XX:+ZGenerational
+-XX:+AlwaysPreTouch
+-XX:+DisableExplicitGC
+-Dfile.encoding=UTF-8</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">06</span><h2>Mod vs Plugin — differenza client</h2></div>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Mod server-side only</div>
+        <p>Lithium, Starlight, Carpet — il client non le vede. Un Vanilla si connette senza problemi.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>Mod gameplay / contenuto</div>
+        <p>Devono stare <strong>sia sul server che su ogni client</strong>. Un Vanilla viene rifiutato.</p>
+      </div>
+    </div>
+    <p style="margin-top:14px">Scarica mod da <strong>modrinth.com</strong> (versione <strong>26.1 Fabric</strong>). Metti i <code>.jar</code> in <code>mods/</code> via Crafty File Manager. Installa sempre <strong>Fabric API</strong> per prima.</p>
+    <div class="ib note"><span class="ii">i</span><span>Vuoi Discord bridge? → <a href="../addons/discord-bridge.html" style="color:var(--green)">Guida AMCDB</a></span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">07</span><h2>Port forwarding</h2></div>
+    <table><tr><th>Porta</th><th>Uso</th></tr>
+      <tr><td>25565 TCP</td><td>Server Minecraft</td></tr>
+      <tr><td>8443 TCP</td><td>Crafty — solo LAN</td></tr></table>
+  </div>
+
+  <footer><span>Fabric 26.1 · Crafty 4.x · 2026</span><span>Java 25 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

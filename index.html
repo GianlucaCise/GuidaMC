@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guida Server Minecraft</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn active" href="index.html">Home</a>
+    <a class="nav-btn" href="addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="home-wrap">
+  <div class="tag">Linux Mint 22.3 · Self-Hosted · 2026</div>
+  <h1 class="home-title">Server Minecraft<br><span>Guida all'installazione</span></h1>
+  <p class="home-sub">// Ryzen 7 · 8GB RAM · No Docker · Linux Mint 22.3</p>
+
+  <p class="home-question">Che tipo di server vuoi installare?</p>
+  <p class="home-note">// Vanilla = gioco puro · Paper = plugin · Fabric = mod</p>
+
+  <div class="choices">
+    <a href="#" class="choice-card cv" onclick="pick('vanilla',this);return false;">
+      <span class="choice-icon">🌿</span>
+      <div class="choice-title">Vanilla</div>
+      <div class="choice-desc">Server ufficiale Mojang. No plugin, no mod. Supporta già 26.1.</div>
+      <span class="badge bg">26.1 · Java 25</span>
+    </a>
+    <a href="#" class="choice-card cp" onclick="pick('paper',this);return false;">
+      <span class="choice-icon">📄</span>
+      <div class="choice-title">Paper</div>
+      <div class="choice-desc">Fork ottimizzato con plugin Bukkit/Spigot. Più performante del vanilla.</div>
+      <span class="badge ba">1.21.11 · Java 21</span>
+    </a>
+    <a href="#" class="choice-card cf" onclick="pick('fabric',this);return false;">
+      <span class="choice-icon">🧵</span>
+      <div class="choice-title">Fabric</div>
+      <div class="choice-desc">Mod loader leggero. Ideale per performance mods, QoL.</div>
+      <span class="badge bg">26.1 · Java 25</span>
+    </a>
+  </div>
+
+  <div class="crafty-q" id="crafty-q">
+    <div class="cq-title">Vuoi usare Crafty Controller?</div>
+    <div class="cq-sub">Pannello web per gestire il server (console live, backup automatici). Opzionale — il server funziona anche senza. Impatto RAM: ~50–100MB in idle.</div>
+    <div class="cq-btns">
+      <a href="#" id="btn-crafty-yes" class="cq-btn y">✓ Sì, voglio Crafty</a>
+      <a href="#" id="btn-crafty-no" class="cq-btn n">✗ No, solo systemd</a>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;border-top:1px solid var(--border);padding-top:28px;">
+    <p class="home-question" style="margin-bottom:14px">Hai amici su Bedrock (mobile/console)?</p>
+    <a href="addons/geyser.html" class="choice-card cx" style="max-width:420px;display:block">
+      <span class="choice-icon">🌉</span>
+      <div class="choice-title">GeyserMC + Floodgate</div>
+      <div class="choice-desc">Permette ai giocatori Bedrock di connettersi al tuo server Java.</div>
+      <span class="badge ba">Guida dedicata →</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  const routes = {
+    vanilla: { crafty: 'server/vanilla-crafty.html', systemd: 'server/vanilla-systemd.html' },
+    paper:   { crafty: 'server/paper-crafty.html',   systemd: 'server/paper-systemd.html'   },
+    fabric:  { crafty: 'server/fabric-crafty.html',  systemd: 'server/fabric-systemd.html'  },
+  };
+  let sel = null;
+
+  function pick(type, card) {
+    sel = type;
+    document.querySelectorAll('.choice-card').forEach(c => c.style.opacity = '.5');
+    card.style.opacity = '1';
+    const q = document.getElementById('crafty-q');
+    q.classList.add('visible');
+    q.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('btn-crafty-yes').href = routes[sel].crafty;
+    document.getElementById('btn-crafty-no').href  = routes[sel].systemd;
+  }
+</script>
+</body>
+</html>

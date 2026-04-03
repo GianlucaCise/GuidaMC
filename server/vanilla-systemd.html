@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanilla 26.1 solo systemd — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn" href="../addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="gh">
+    <a class="back-btn" href="../index.html">← Home</a>
+    <div class="tag">Vanilla 26.1 · Solo systemd</div>
+    <h1>Server <span class="ag">Vanilla 26.1</span><br>solo systemd</h1>
+    <p class="subtitle">// Massima leggerezza · Java 25 · No panel</p>
+  </header>
+
+  <div class="ib note" style="margin-bottom:24px"><span class="ii">i</span>
+    <span>Cartella server: <strong>/opt/mcserver/vanilla</strong> — non /opt/minecraft, per non collidere con l'utente di Crafty se installato.</span>
+  </div>
+
+  <div class="prereq"><div class="prereq-title">⚙ Prerequisiti</div>
+    <ul><li>Linux Mint 22.3</li><li>sudo</li><li>Java 25</li><li>wget</li><li>Porta 25565</li></ul>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn">01</span><h2>Installa Java 25</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo apt update && sudo apt upgrade -y</span>
+<span class="cc">sudo apt install -y openjdk-25-jre-headless wget</span>
+<span class="cc">java -version</span>  <span class="cm"># → openjdk 25.x.x</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">02</span><h2>Crea utente e cartella</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo useradd -r -m -d</span> <span class="cpa">/opt/mcserver</span> <span class="cf2">-s /bin/bash</span> <span class="cv2">mcserver</span>
+<span class="cc">sudo mkdir -p</span> <span class="cpa">/opt/mcserver/vanilla</span>
+<span class="cc">sudo chown -R mcserver:mcserver</span> <span class="cpa">/opt/mcserver</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Scarica il JAR ufficiale 26.1</h2></div>
+    <div class="ib note"><span class="ii">i</span><span>Vai su <strong>minecraft.net/en-us/download/server</strong>, copia il link del bottone e usalo nel comando sotto.</span></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo -u mcserver wget</span> <span class="cv2">"&lt;URL_JAR_DA_MINECRAFT.NET&gt;"</span> \
+  <span class="cf2">-O</span> <span class="cpa">/opt/mcserver/vanilla/server.jar</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">04</span><h2>Prima avviata + EULA</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Entra come utente mcserver</span>
+<span class="cc">sudo -u mcserver bash</span>
+<span class="cc">cd</span> <span class="cpa">/opt/mcserver/vanilla</span>
+<span class="cc">java -jar server.jar nogui</span>
+<span class="cm"># Si ferma → accetta EULA</span>
+<span class="cc">sed -i</span> <span class="cv2">'s/eula=false/eula=true/'</span> <span class="cpa">eula.txt</span>
+<span class="cc">exit</span></pre></div>
+    <div class="cfile"><div class="cfn">📄 /opt/mcserver/vanilla/server.properties</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cc">max-players</span>=<span class="cv2">10</span>
+<span class="cc">view-distance</span>=<span class="cv2">8</span>
+<span class="cc">white-list</span>=<span class="cv2">true</span>
+<span class="cc">difficulty</span>=<span class="cv2">normal</span>
+<span class="cc">online-mode</span>=<span class="cv2">true</span>
+<span class="cc">motd</span>=<span class="cv2">Il nostro server 🎮</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">05</span><h2>Service systemd</h2></div>
+    <div class="cfile"><div class="cfn">📄 /etc/systemd/system/mcserver.service</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a">[Unit]
+<span class="cc">Description</span>=<span class="cv2">Minecraft Vanilla 26.1</span>
+<span class="cc">After</span>=<span class="cv2">network.target</span>
+
+[Service]
+<span class="cc">User</span>=<span class="cv2">mcserver</span>
+<span class="cc">WorkingDirectory</span>=<span class="cpa">/opt/mcserver/vanilla</span>
+<span class="cc">ExecStart</span>=<span class="cv2">/usr/bin/java \
+  -Xms1G -Xmx4G \
+  -XX:+UseZGC \
+  -XX:+ZGenerational \
+  -XX:+AlwaysPreTouch \
+  -XX:+DisableExplicitGC \
+  -jar server.jar nogui</span>
+<span class="cc">Restart</span>=<span class="cv2">on-failure</span>
+<span class="cc">RestartSec</span>=<span class="cv2">10</span>
+
+[Install]
+<span class="cc">WantedBy</span>=<span class="cv2">multi-user.target</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo systemctl daemon-reload</span>
+<span class="cc">sudo systemctl enable mcserver.service</span>
+<span class="cc">sudo systemctl start mcserver.service</span>
+<span class="cc">sudo journalctl -u mcserver.service -f</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn">06</span><h2>Port forwarding</h2></div>
+    <table><tr><th>Porta</th><th>Uso</th></tr>
+      <tr><td>25565 TCP</td><td>Server Minecraft</td></tr></table>
+    <div class="ib tip" style="margin-top:10px"><span class="ii">✓</span><span>IP statico locale via DHCP reservation → forwarda 25565. IP dinamico? Usa <strong>DuckDNS</strong>.</span></div>
+    <div class="ib note" style="margin-top:6px"><span class="ii">i</span><span>Senza Crafty non hai console interattiva live. Per comandi al volo usa <strong>screen</strong> o <strong>tmux</strong>.</span></div>
+  </div>
+
+  <footer><span>Vanilla 26.1 · systemd · 2026</span><span>Java 25 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

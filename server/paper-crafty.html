@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper 1.21.11 + Crafty — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn" href="../addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="gh">
+    <a class="back-btn" href="../index.html">← Home</a>
+    <div class="tag">Paper 1.21.11 · Crafty Controller</div>
+    <h1>Server <span class="ab">Paper 1.21.11</span><br>+ Crafty</h1>
+    <p class="subtitle">// Plugin Bukkit/Spigot · Java 21 · Pannello web</p>
+  </header>
+
+  <div class="ib warn" style="margin-bottom:24px"><span class="ii">!</span>
+    <span><strong>Paper non supporta ancora Minecraft 26.1.</strong> Questa guida usa la versione stabile <strong>1.21.11</strong> con Java 21. Aggiorna appena Paper rilascia il supporto.</span>
+  </div>
+
+  <div class="prereq"><div class="prereq-title">⚙ Prerequisiti</div>
+    <ul><li>Linux Mint 22.3</li><li>sudo</li><li>Java 21</li><li>Python 3.10+</li><li>Git</li><li>Porta 25565</li></ul>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Installa Java 21 e dipendenze</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo apt update && sudo apt upgrade -y</span>
+<span class="cc">sudo apt install -y openjdk-21-jre-headless git python3 python3-dev</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">02</span><h2>Installa Crafty Controller</h2></div>
+    <div class="ib warn"><span class="ii">!</span><span>Linux Mint non è supportato ufficialmente. Se l'installer dà errore, usa il workaround con <code>/etc/os-release</code>.</span></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">git clone https://gitlab.com/crafty-controller/crafty-installer-4.0.git</span>
+<span class="cc">cd crafty-installer-4.0 && chmod +x install_crafty.sh</span>
+<span class="cc">sudo ./install_crafty.sh</span>  <span class="cm"># branch: master</span>
+<span class="cc">sudo systemctl enable crafty.service</span>
+<span class="cc">sudo systemctl start crafty.service</span></pre></div>
+    <p>Pannello su <strong>https://localhost:8443</strong></p>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">03</span><h2>Crea il server Paper in Crafty</h2></div>
+    <p><strong>Create a Server</strong> → Minecraft Java → <strong>Paper</strong> → <strong>1.21.11</strong> → Build Server!</p>
+    <div class="ib warn"><span class="ii">!</span><span>Prima avviata: <code>eula.txt</code> in Crafty → <code>false</code>→<code>true</code> → riavvia.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">04</span><h2>JVM flags — Aikar's Flags (G1GC)</h2></div>
+    <p>In Crafty: <em>Server Settings → JVM Arguments</em>:</p>
+    <div class="cb"><div class="ch"><span class="cl">Aikar's Flags — Paper 1.21.11</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cf2">-Xms2G -Xmx4G
+-XX:+UseG1GC
+-XX:+ParallelRefProcEnabled
+-XX:MaxGCPauseMillis=200
+-XX:+UnlockExperimentalVMOptions
+-XX:+DisableExplicitGC
+-XX:+AlwaysPreTouch
+-XX:G1NewSizePercent=30
+-XX:G1MaxNewSizePercent=40
+-XX:G1HeapRegionSize=8M
+-XX:G1ReservePercent=20
+-XX:G1HeapWastePercent=5
+-XX:G1MixedGCCountTarget=4
+-XX:InitiatingHeapOccupancyPercent=15
+-XX:G1MixedGCLiveThresholdPercent=90
+-XX:SurvivorRatio=32
+-XX:+PerfDisableSharedMem
+-XX:MaxTenuringThreshold=1</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">05</span><h2>server.properties, whitelist e porte</h2></div>
+    <div class="cfile"><div class="cfn">📄 server.properties</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cc">max-players</span>=<span class="cv2">10</span>
+<span class="cc">view-distance</span>=<span class="cv2">8</span>
+<span class="cc">white-list</span>=<span class="cv2">true</span>
+<span class="cc">difficulty</span>=<span class="cv2">normal</span>
+<span class="cc">online-mode</span>=<span class="cv2">true</span>
+<span class="cc">motd</span>=<span class="cv2">Il nostro server 🎮</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">Console Minecraft</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">whitelist add</span> <span class="cv2">NomeGiocatore</span>
+<span class="cc">op</span> <span class="cv2">TuoNome</span></pre></div>
+    <table style="margin-top:14px"><tr><th>Porta</th><th>Uso</th></tr>
+      <tr><td>25565 TCP</td><td>Server Minecraft</td></tr>
+      <tr><td>8443 TCP</td><td>Crafty — solo LAN</td></tr></table>
+    <div class="ib tip" style="margin-top:12px"><span class="ii">✓</span><span>Backup: Crafty → Server → Backup → 3 max, compressi, ogni notte alle 04:00.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn b">06</span><h2>Plugin — installazione</h2></div>
+    <p>Scarica da <strong>hangar.papermc.io</strong>, modrinth.com o spigotmc.org. Copia il <code>.jar</code> in <code>plugins/</code> tramite il File Manager di Crafty e riavvia. I client degli amici non devono installare nulla.</p>
+    <div class="ib note"><span class="ii">i</span><span>Vuoi GeyserMC per il crossplay Bedrock? → <a href="../addons/geyser.html" style="color:var(--green)">Guida GeyserMC</a></span></div>
+    <div class="ib note"><span class="ii">i</span><span>Vuoi la chat bridge con Discord? → <a href="../addons/discord-bridge.html" style="color:var(--green)">Guida DiscordSRV</a></span></div>
+  </div>
+
+  <footer><span>Paper 1.21.11 · Crafty 4.x · 2026</span><span>Java 21 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

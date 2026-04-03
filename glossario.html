@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossario — Guida MC</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="index.html">Home</a>
+    <a class="nav-btn" href="addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn active" href="glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Home</a>
+    <div class="tag">Glossario · Ecosistema Minecraft Server</div>
+    <h1>Glossario<br><span class="ag">server, proxy, loader</span></h1>
+    <p class="subtitle">// Tutto quello che hai sentito nominare, spiegato</p>
+  </header>
+
+  <!-- SOFTWARE SERVER -->
+  <div class="info-group">
+    <div class="info-group-title">🖥 Software Server — girano su una macchina e ospitano il mondo</div>
+    <div class="info-cards">
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#6b7269"></span><span class="ic-name">Vanilla</span><span class="ic-type sv">server</span></div>
+        <p class="ic-desc">Il server ufficiale di Mojang. Nessun plugin, nessuna mod. È il punto di partenza da cui deriva tutto il resto. Supporta l'ultima versione MC non appena Mojang la rilascia.</p>
+        <div class="ic-tags"><span class="ic-tag">ufficiale Mojang</span><span class="ic-tag">no plugin</span><span class="ic-tag">26.1 ✓</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#94a3b8"></span><span class="ic-name">Bukkit</span><span class="ic-type sv">server</span></div>
+        <p class="ic-desc">Il primo progetto a introdurre un'API per plugin nel 2011. Non più sviluppato attivamente ma ha definito lo standard dei plugin MC. Oggi non si usa direttamente — Spigot e Paper lo hanno sostituito mantenendo la compatibilità.</p>
+        <div class="ic-tags"><span class="ic-tag">storico</span><span class="ic-tag">API plugin</span><span class="ic-tag">deprecato</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#f59e0b"></span><span class="ic-name">Spigot</span><span class="ic-type fk">fork di Bukkit</span></div>
+        <p class="ic-desc">Fork ottimizzato di Bukkit, ancora molto usato. Migliora le performance e supporta plugin Bukkit. Oggi Paper è generalmente preferito, ma Spigot rimane la base per moltissimi plugin esistenti.</p>
+        <div class="ic-tags"><span class="ic-tag">plugin Bukkit</span><span class="ic-tag">ottimizzato</span><span class="ic-tag">base di Paper</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#60a5fa"></span><span class="ic-name">Paper</span><span class="ic-type fk">fork di Spigot</span></div>
+        <p class="ic-desc">Fork di Spigot con ottimizzazioni aggressive, bug fix e API estese. Il server più usato al mondo per plugin. Compatibile con tutti i plugin Bukkit/Spigot. Ha anche una propria API aggiuntiva (Paper API).</p>
+        <div class="ic-tags"><span class="ic-tag">plugin Bukkit/Spigot/Paper</span><span class="ic-tag">molto diffuso</span><span class="ic-tag">1.21.11</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#a78bfa"></span><span class="ic-name">Purpur</span><span class="ic-type fk">fork di Paper</span></div>
+        <p class="ic-desc">Fork di Paper con ancora più opzioni di configurazione e feature extra (mob personalizzabili, gameplay tweaks). Compatibile con tutti i plugin Paper/Spigot/Bukkit. Ottima scelta se vuoi più controllo di Paper.</p>
+        <div class="ic-tags"><span class="ic-tag">plugin Paper+</span><span class="ic-tag">altamente configurabile</span><span class="ic-tag">fork di Paper</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#4ade80"></span><span class="ic-name">Folia</span><span class="ic-type fk">fork di Paper</span></div>
+        <p class="ic-desc">Fork sperimentale di Paper con <strong>multithreading regionalizzato</strong>: divide la mappa in regioni indipendenti su thread separati. Ottimo per server enormi. Però rompe la compatibilità con molti plugin — non tutti i plugin Paper funzionano.</p>
+        <div class="ic-tags"><span class="ic-tag">multithreading</span><span class="ic-tag">server grandi</span><span class="ic-tag">plugin limitati</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#f472b6"></span><span class="ic-name">Fabric</span><span class="ic-type ld">mod loader</span></div>
+        <p class="ic-desc">Mod loader leggero e modulare. Aggiorna velocemente alle nuove versioni MC. Ideale per mod di ottimizzazione, QoL e mod leggere. Non supporta plugin Bukkit/Spigot. Richiede che le mod gameplay siano installate anche sul client.</p>
+        <div class="ic-tags"><span class="ic-tag">mod</span><span class="ic-tag">leggero</span><span class="ic-tag">26.1 ✓</span><span class="ic-tag">no plugin Bukkit</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#fb923c"></span><span class="ic-name">Forge</span><span class="ic-type ld">mod loader</span></div>
+        <p class="ic-desc">Il mod loader storico dal 2011. Supporta migliaia di mod pesanti (tecnologia, magia, dimensioni) e i grandi modpack come FTB, ATM, Enigmatica. Più lento ad aggiornarsi rispetto a Fabric. Oggi coesiste con NeoForge.</p>
+        <div class="ic-tags"><span class="ic-tag">mod pesanti</span><span class="ic-tag">modpack FTB/ATM</span><span class="ic-tag">storico</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#f97316"></span><span class="ic-name">NeoForge</span><span class="ic-type fk">fork di Forge</span></div>
+        <p class="ic-desc">Fork di Forge nato nel 2023 da una scissione del team originale. È diventato rapidamente il successore de facto di Forge per le versioni MC moderne. Compatibile con la maggior parte delle mod Forge. Preferito per le nuove versioni.</p>
+        <div class="ic-tags"><span class="ic-tag">fork di Forge</span><span class="ic-tag">versioni recenti</span><span class="ic-tag">modpack moderni</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#818cf8"></span><span class="ic-name">Quilt</span><span class="ic-type fk">fork di Fabric</span></div>
+        <p class="ic-desc">Fork di Fabric nato nel 2021 con API più ricca e governance più aperta. Compatibile con la maggior parte delle mod Fabric. Meno diffuso di Fabric ma con community attiva. In pratica un'alternativa con qualche feature in più.</p>
+        <div class="ic-tags"><span class="ic-tag">fork di Fabric</span><span class="ic-tag">compatibile Fabric</span><span class="ic-tag">community-driven</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROXY -->
+  <div class="info-group">
+    <div class="info-group-title">🔀 Proxy / Network — si mettono davanti a più server e gestiscono il routing</div>
+    <div class="info-cards">
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#38bdf8"></span><span class="ic-name">BungeeCord</span><span class="ic-type px">proxy</span></div>
+        <p class="ic-desc">Il proxy storico per i network Minecraft. Permette di collegare più server (lobby, survival, minigame) in modo che i giocatori si spostino senza disconnettersi. Non più mantenuto attivamente — Velocity lo ha superato.</p>
+        <div class="ic-tags"><span class="ic-tag">network multi-server</span><span class="ic-tag">storico</span><span class="ic-tag">sostituito da Velocity</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#7dd3fc"></span><span class="ic-name">Waterfall</span><span class="ic-type fk">fork di BungeeCord</span></div>
+        <p class="ic-desc">Fork di BungeeCord mantenuto dal team di Paper. Più stabile e performante dell'originale. Mantiene la compatibilità con i plugin BungeeCord. Anch'esso superato da Velocity per i setup moderni.</p>
+        <div class="ic-tags"><span class="ic-tag">fork BungeeCord</span><span class="ic-tag">plugin BungeeCord</span><span class="ic-tag">team Paper</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#34d399"></span><span class="ic-name">Velocity</span><span class="ic-type px">proxy</span></div>
+        <p class="ic-desc">Il proxy moderno e raccomandato. Scritto da zero per essere veloce e sicuro. Ha il proprio sistema di plugin (non compatibile con BungeeCord) ma è molto più performante. Supportato attivamente dal team di Paper. La scelta per nuovi network.</p>
+        <div class="ic-tags"><span class="ic-tag">moderno</span><span class="ic-tag">performante</span><span class="ic-tag">consigliato</span><span class="ic-tag">proprio sistema plugin</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-dot" style="background:#86efac"></span><span class="ic-name">GeyserMC</span><span class="ic-type px">bridge / plugin</span></div>
+        <p class="ic-desc">Traduttore di protocollo Java ↔ Bedrock. Permette ai giocatori Bedrock di connettersi a server Java. Gira come plugin (Paper), mod (Fabric) o proxy standalone. Funziona con Floodgate per l'autenticazione Xbox.</p>
+        <div class="ic-tags"><span class="ic-tag">crossplay</span><span class="ic-tag">Java↔Bedrock</span><span class="ic-tag">plugin/mod/proxy</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TABELLA -->
+  <div class="info-group">
+    <div class="info-group-title">📊 Riepilogo — quale scegliere</div>
+    <table>
+      <tr><th>Software</th><th>Plugin</th><th>Mod</th><th>Client Vanilla OK?</th><th>Consigliato per</th></tr>
+      <tr><td>Vanilla</td><td style="color:var(--muted)">✗</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">gioco puro tra amici</td></tr>
+      <tr><td>Paper</td><td style="color:var(--green)">✓ Bukkit/Spigot/Paper</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">server con plugin, SMP</td></tr>
+      <tr><td>Purpur</td><td style="color:var(--green)">✓ Bukkit/Spigot/Paper</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">come Paper + più config</td></tr>
+      <tr><td>Folia</td><td style="color:var(--amber)">⚠ limitato</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">server enormi (50+ giocatori)</td></tr>
+      <tr><td>Fabric</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓ Fabric</td><td style="color:var(--amber)">⚠ solo mod server-side</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">ottimizzazioni, QoL, mod leggere</td></tr>
+      <tr><td>Forge/NeoForge</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓ Forge</td><td style="color:#f87171">✗ serve client modded</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">modpack pesanti (FTB, ATM…)</td></tr>
+      <tr><td>Velocity</td><td style="color:var(--green)">✓ Velocity</td><td style="color:var(--muted)">✗</td><td style="color:var(--green)">✓</td><td style="color:var(--muted);font-family:var(--mono);font-size:12px">network con più server</td></tr>
+    </table>
+    <div class="ib note" style="margin-top:14px"><span class="ii">i</span>
+      <span>Per un server tra amici come il tuo, <strong>Paper o Fabric</strong> sono le scelte ideali. Proxy come Velocity/BungeeCord servono solo con più server distinti collegati — non ti servono.</span>
+    </div>
+  </div>
+
+  <footer><span>Glossario · Ecosistema Minecraft Server · 2026</span><span>Linux Mint 22.3</span></footer>
+</div>
+<script src="shared.js"></script>
+</body>
+</html>

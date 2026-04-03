@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric 26.1 solo systemd — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn" href="../addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="gh">
+    <a class="back-btn" href="../index.html">← Home</a>
+    <div class="tag">Fabric 26.1 · Solo systemd</div>
+    <h1>Server <span class="ap">Fabric 26.1</span><br>solo systemd</h1>
+    <p class="subtitle">// Mod loader · Java 25 · No panel · Massima leggerezza</p>
+  </header>
+
+  <div class="prereq"><div class="prereq-title">⚙ Prerequisiti</div>
+    <ul><li>Linux Mint 22.3</li><li>sudo</li><li>Java 25</li><li>wget</li><li>Porta 25565</li></ul>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn p">01</span><h2>Installa Java 25</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo apt update && sudo apt upgrade -y</span>
+<span class="cc">sudo apt install -y openjdk-25-jre-headless wget</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Crea utente e cartella</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo useradd -r -m -d</span> <span class="cpa">/opt/mcserver</span> <span class="cf2">-s /bin/bash</span> <span class="cv2">mcserver</span>
+<span class="cc">sudo mkdir -p</span> <span class="cpa">/opt/mcserver/fabric</span>
+<span class="cc">sudo chown -R mcserver:mcserver</span> <span class="cpa">/opt/mcserver</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">03</span><h2>Scarica e avvia il Fabric Launcher</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo -u mcserver wget</span> \
+  <span class="cv2">"https://meta.fabricmc.net/v2/versions/loader/26.1/latest/stable/server/jar"</span> \
+  <span class="cf2">-O</span> <span class="cpa">/opt/mcserver/fabric/fabric-server-launch.jar</span>
+
+<span class="cm"># Prima avviata — Fabric scarica le librerie, poi va in crash per EULA</span>
+<span class="cc">sudo -u mcserver bash</span>
+<span class="cc">cd</span> <span class="cpa">/opt/mcserver/fabric</span>
+<span class="cc">java -jar fabric-server-launch.jar nogui</span>
+<span class="cc">sed -i</span> <span class="cv2">'s/eula=false/eula=true/'</span> <span class="cpa">eula.txt</span>
+<span class="cc">exit</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Il primo avvio scarica automaticamente Minecraft e le librerie Fabric. Ci vorrà qualche minuto — normale.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">04</span><h2>Service systemd</h2></div>
+    <div class="cfile"><div class="cfn">📄 /etc/systemd/system/mcserver.service</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a">[Unit]
+<span class="cc">Description</span>=<span class="cv2">Fabric Minecraft 26.1</span>
+<span class="cc">After</span>=<span class="cv2">network.target</span>
+
+[Service]
+<span class="cc">User</span>=<span class="cv2">mcserver</span>
+<span class="cc">WorkingDirectory</span>=<span class="cpa">/opt/mcserver/fabric</span>
+<span class="cc">ExecStart</span>=<span class="cv2">/usr/bin/java \
+  -Xms2G -Xmx4G \
+  -XX:+UseZGC \
+  -XX:+ZGenerational \
+  -XX:+AlwaysPreTouch \
+  -XX:+DisableExplicitGC \
+  -jar fabric-server-launch.jar nogui</span>
+<span class="cc">Restart</span>=<span class="cv2">on-failure</span>
+<span class="cc">RestartSec</span>=<span class="cv2">10</span>
+
+[Install]
+<span class="cc">WantedBy</span>=<span class="cv2">multi-user.target</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo systemctl daemon-reload</span>
+<span class="cc">sudo systemctl enable mcserver.service</span>
+<span class="cc">sudo systemctl start mcserver.service</span>
+<span class="cc">sudo journalctl -u mcserver.service -f</span></pre></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">05</span><h2>Installare mod</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo -u mcserver mkdir -p</span> <span class="cpa">/opt/mcserver/fabric/mods</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/fabric-api-x.x.x.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/*.jar</span>
+<span class="cc">sudo systemctl restart mcserver.service</span></pre></div>
+    <div class="ib warn"><span class="ii">!</span><span>Mod gameplay devono stare anche su ogni client. Mod server-side (Lithium, Starlight) vanno solo sul server — client Vanilla OK.</span></div>
+    <div class="ib note"><span class="ii">i</span><span>Discord bridge? → <a href="../addons/discord-bridge.html" style="color:var(--green)">Guida AMCDB</a></span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">06</span><h2>Port forwarding</h2></div>
+    <table><tr><th>Porta</th><th>Uso</th></tr>
+      <tr><td>25565 TCP</td><td>Server Minecraft</td></tr></table>
+    <div class="ib tip" style="margin-top:10px"><span class="ii">✓</span><span>IP statico via DHCP reservation → forwarda 25565. IP dinamico? Usa <strong>DuckDNS</strong>.</span></div>
+  </div>
+
+  <footer><span>Fabric 26.1 · systemd · 2026</span><span>Java 25 · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

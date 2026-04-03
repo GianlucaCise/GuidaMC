@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Bridge Discord — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn active" href="index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Plugin & Mod</a>
+    <div class="tag">Chat Bridge · DiscordSRV · AMCDB</div>
+    <h1>Chat Bridge<br><span style="color:#5865f2">Minecraft ↔ Discord</span></h1>
+    <p class="subtitle">// DiscordSRV per Paper · AMCDB per Fabric · server-side only</p>
+  </header>
+
+  <!-- PANORAMICA -->
+  <div class="section"><div class="sh"><span class="sn">00</span><h2>Panoramica</h2></div>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:#5865f2"></span>Cosa fa</div>
+        <p>Collega la chat in-game a un canale Discord. I messaggi scritti in-game appaiono su Discord e viceversa. Include notifiche morte, avanzamenti e console opzionale su un canale dedicato.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Cosa ti serve</div>
+        <p>Un server Discord. Un <strong>bot Discord</strong> creato dal Developer Portal — è l'app che si connette e manda i messaggi. Il token del bot va nel config del plugin/mod.</p>
+      </div>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- STEP 0 — BOT DISCORD -->
+  <div class="section"><div class="sh"><span class="sn a">00</span><h2>Crea il bot Discord — uguale per Paper e Fabric</h2></div>
+    <p><strong>1. Vai al Discord Developer Portal</strong></p>
+    <div class="cb"><div class="ch"><span class="cl">URL</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cv2">https://discord.com/developers/applications</span></pre></div>
+
+    <p style="margin-top:14px"><strong>2. Crea una nuova applicazione</strong><br>
+    Clicca <strong>New Application</strong> → dagli un nome (es. <code>MC Bridge</code>) → Create.</p>
+
+    <p style="margin-top:14px"><strong>3. Configura il bot</strong><br>
+    Menu a sinistra → <strong>Bot</strong>. Poi:</p>
+    <div class="mods-grid" style="margin-bottom:14px">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Copia il token</div>
+        <p>Clicca <strong>Reset Token</strong> → conferma → copia il token. Salvalo — ti servirà nel config. Non condividerlo mai.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Abilita gli intents</div>
+        <p>Scorri in basso → <strong>Privileged Gateway Intents</strong> → abilita <strong>SERVER MEMBERS INTENT</strong> e <strong>MESSAGE CONTENT INTENT</strong>. Senza questi il bot non legge i messaggi.</p>
+      </div>
+    </div>
+
+    <p><strong>4. Invita il bot nel tuo server Discord</strong><br>
+    Menu a sinistra → <strong>OAuth2 → URL Generator</strong> → Scopes: seleziona <code>bot</code> → Bot Permissions:</p>
+    <div class="cb"><div class="ch"><span class="cl">Permessi minimi</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre>Read Messages / View Channels
+Send Messages
+Read Message History
+Embed Links</pre></div>
+    <p>Copia l'URL generato in fondo, aprilo nel browser, seleziona il tuo server → Autorizza.</p>
+
+    <div class="ib warn"><span class="ii">!</span>
+      <span><strong>Il token è come una password.</strong> Non condividerlo e non metterlo in file pubblici. Se viene compromesso, fai Reset Token nel Developer Portal.</span>
+    </div>
+
+    <p style="margin-top:14px"><strong>5. Copia l'ID del canale chat</strong><br>
+    In Discord: Impostazioni → App → <strong>Modalità sviluppatore</strong> → attiva. Poi tasto destro sul canale → <strong>Copia ID canale</strong>. Salvalo — serve nel config.</p>
+  </div><div class="divider"></div>
+
+  <!-- PAPER -->
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Paper — DiscordSRV (plugin)</h2></div>
+    <p>Scarica il JAR da <strong>modrinth.com/plugin/discordsrv</strong> o da hangar.papermc.io.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash — installa il plugin</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Con Crafty: usa il File Manager</span>
+<span class="cm"># Senza Crafty:</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/DiscordSRV.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/DiscordSRV.jar</span>
+<span class="cm"># Avvia il server una volta per generare il config, poi fermalo</span>
+<span class="cc">sudo systemctl restart mcserver.service</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <p style="margin-top:14px">Apri <code>plugins/DiscordSRV/config.yml</code>:</p>
+    <div class="cfile"><div class="cfn">📄 plugins/DiscordSRV/config.yml — righe chiave</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a"><span class="cm"># Token del bot Discord</span>
+BotToken: <span class="cv2">"IL_TUO_TOKEN_QUI"</span>
+
+<span class="cm"># ID del canale chat</span>
+Channels: {<span class="cv2">"global"</span>: <span class="cv2">"ID_CANALE_QUI"</span>}
+
+<span class="cm"># (Opzionale) Canale console — solo tu devi poter scrivere lì!</span>
+DiscordConsoleChannelId: <span class="cv2">"ID_CANALE_CONSOLE"</span>
+
+<span class="cm"># Notifiche morte e avanzamenti su Discord</span>
+DiscordChatChannelGameDeathEventsEnabled: <span class="cv2">true</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. Usa <code>/discordsrv reload</code> in-game per ricaricare il config senza riavviare.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- FABRIC -->
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Fabric — AMCDB (mod)</h2></div>
+    <p>AMCDB è leggero, server-side only e stabile. Scarica da <strong>modrinth.com/mod/amcdb</strong>. Richiede <strong>Fabric API</strong>.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/amcdb-x.x.x.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/amcdb-x.x.x.jar</span>
+<span class="cm"># Prima avviata — genera il config (va in crash, è normale)</span>
+<span class="cc">sudo systemctl start mcserver.service</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <div class="ib note"><span class="ii">i</span><span>Il primo avvio con AMCDB va in crash perché manca il config — è atteso. Il file viene creato, poi lo compili e riavvii.</span></div>
+
+    <p style="margin-top:14px">Apri <code>config/amcdb.properties</code>:</p>
+    <div class="cfile"><div class="cfn">📄 config/amcdb.properties — righe chiave</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a"><span class="cm"># Token del bot Discord</span>
+amcdb.discord.token=<span class="cv2">IL_TUO_TOKEN_QUI</span>
+
+<span class="cm"># ID del canale chat</span>
+amcdb.discord.chat.channel=<span class="cv2">ID_CANALE_QUI</span>
+
+<span class="cm"># (Opzionale) Canale console</span>
+amcdb.discord.console.channel=<span class="cv2">ID_CANALE_CONSOLE</span>
+
+<span class="cm"># Abilita esecuzione comandi dal canale console (default: false)</span>
+amcdb.discord.channels.console.enableExecution=<span class="cv2">false</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. AMCDB lavora off-thread — impatto sulle performance praticamente zero.</span></div>
+    <div class="ib warn"><span class="ii">!</span><span>Se abiliti <code>enableExecution=true</code>, assicurati che solo tu possa scrivere nel canale console Discord.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- CONFRONTO -->
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Confronto rapido</h2></div>
+    <table>
+      <tr><th>Feature</th><th>DiscordSRV (Paper)</th><th>AMCDB (Fabric)</th></tr>
+      <tr><td>Chat bidirezionale</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Canale console</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Notifiche morte/avanzamento</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Webhook support</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Link account Discord↔MC</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
+      <tr><td>Sincronizzazione ruoli</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
+      <tr><td>Server-side only</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Leggerezza</td><td style="color:var(--amber)">medio</td><td style="color:var(--green)">molto leggero</td></tr>
+    </table>
+  </div>
+
+  <footer><span>Chat Bridge · DiscordSRV + AMCDB · 2026</span><span>Paper · Fabric · Linux Mint 22.3</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>
