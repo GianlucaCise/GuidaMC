@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlueMap — Mappa Web 3D — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn active" href="index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../versioni.html">Versioni</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Plugin & Mod</a>
+    <div class="tag">BlueMap · Mappa 3D · Web Browser · Paper + Fabric</div>
+    <h1>Mappa web 3D<br><span class="ag">BlueMap</span></h1>
+    <p class="subtitle">// Mappa interattiva 3D · Web server integrato · Paper + Fabric</p>
+  </header>
+
+  <!-- PANORAMICA -->
+  <div class="section"><div class="sh"><span class="sn">00</span><h2>Cos'è BlueMap</h2></div>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Cosa fa</div>
+        <p>BlueMap genera una mappa 3D interattiva del mondo Minecraft, visualizzabile da qualsiasi browser. Mostra edifici in 3D con illuminazione realistica, posizione dei giocatori online in tempo reale, e permette di muoversi liberamente sulla mappa come su Google Maps. Include un web server integrato sulla porta <strong>8100</strong>.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Compatibilità</div>
+        <p>Funziona sia come <strong>plugin Paper</strong> (Spigot/Paper) che come <strong>mod Fabric</strong>. Il rendering avviene in background su thread separati — non impatta il gameplay. Supporta Overworld, Nether e End separatamente.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Come accedervi</div>
+        <p>Una volta configurato, la mappa è accessibile da browser su <code>http://&lt;IP-del-server&gt;:8100</code>. Per ora la esponi solo in LAN — l'apertura pubblica via port forwarding o reverse proxy la gestiamo separatamente.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>Server-side only</div>
+        <p>I client degli amici non devono installare nulla. BlueMap gira interamente lato server. È sufficiente aprire il browser e navigare all'URL della mappa.</p>
+      </div>
+    </div>
+
+    <div class="ib note" style="margin-top:14px"><span class="ii">i</span>
+      <span><strong>BlueMap vs Dynmap:</strong> Dynmap genera mappe 2D in stile Google Maps (più leggero). BlueMap genera mappe 3D con edifici veri (più bello ma usa più CPU/disco per il primo render). Per un server tra amici con una mappa non enorme, entrambi vanno bene — BlueMap è più moderno e visivamente superiore.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- PAPER -->
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Installazione su Paper (plugin)</h2></div>
+    <p>Scarica il JAR da <strong>hangar.papermc.io/Blue/BlueMap</strong> o <strong>modrinth.com/plugin/bluemap</strong>.</p>
+
+    <div class="cb"><div class="ch"><span class="cl">bash — senza Crafty</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/BlueMap.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/BlueMap.jar</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Con Crafty: usa il File Manager per caricare il JAR nella cartella <code>plugins/</code>.</span></div>
+
+    <p style="margin-top:14px">Avvia il server una volta per generare i file di configurazione, poi fermalo:</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo systemctl restart mcserver.service</span>
+<span class="cm"># Aspetta che il server sia partito completamente, poi fermalo</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <p style="margin-top:14px"><strong>Accetta la EULA di BlueMap</strong> (richiesta per scaricare le texture di Minecraft):</p>
+    <div class="cfile"><div class="cfn">📄 plugins/BlueMap/core.conf — riga da modificare</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cm"># Cambia da false a true per accettare la EULA di Mojang</span>
+<span class="cc">accept-download</span>: <span class="cv2">true</span></pre></div>
+
+    <p style="margin-top:14px"><strong>Configura il web server</strong>:</p>
+    <div class="cfile"><div class="cfn">📄 plugins/BlueMap/webserver.conf</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cm"># Indirizzo su cui ascolta (0.0.0.0 = tutte le interfacce)</span>
+<span class="cc">ip</span>: <span class="cv2">"0.0.0.0"</span>
+
+<span class="cm"># Porta del web server (default 8100)</span>
+<span class="cc">port</span>: <span class="cv2">8100</span>
+
+<span class="cm"># Se vuoi accessibile solo in LAN metti 127.0.0.1 invece di 0.0.0.0</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. BlueMap inizierà a scaricare le texture e a fare il primo render del mondo. Ci vorrà del tempo (dipende dalla dimensione della mappa).</span></div>
+  </div><div class="divider"></div>
+
+  <!-- FABRIC -->
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Installazione su Fabric (mod)</h2></div>
+    <p>Scarica da <strong>modrinth.com/mod/bluemap</strong> la versione Fabric. Non richiede Fabric API come dipendenza — è standalone.</p>
+
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/BlueMap-Fabric.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/BlueMap-Fabric.jar</span>
+
+<span class="cm"># Avvia per generare i config</span>
+<span class="cc">sudo systemctl restart mcserver.service</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <p style="margin-top:14px">I file di configurazione sono in <code>config/bluemap/</code> invece che in <code>plugins/BlueMap/</code>:</p>
+    <div class="cfile"><div class="cfn">📄 config/bluemap/core.conf</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cc">accept-download</span>: <span class="cv2">true</span></pre></div>
+
+    <div class="cfile"><div class="cfn">📄 config/bluemap/webserver.conf</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cc">ip</span>: <span class="cv2">"0.0.0.0"</span>
+<span class="cc">port</span>: <span class="cv2">8100</span></pre></div>
+  </div><div class="divider"></div>
+
+  <!-- PRIMO RENDER -->
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Primo render e comandi</h2></div>
+    <p>Dopo il riavvio BlueMap scarica le texture e inizia a renderizzare in background. Puoi accelerarlo o controllarlo con questi comandi dalla console Minecraft:</p>
+    <div class="cb"><div class="ch"><span class="cl">Console Minecraft</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Controlla lo stato del render</span>
+<span class="cc">/bluemap</span>
+
+<span class="cm"># Forza il render completo del mondo (lento ma completo)</span>
+<span class="cc">/bluemap render world</span>
+
+<span class="cm"># Ferma il render in corso</span>
+<span class="cc">/bluemap stop</span>
+
+<span class="cm"># Riprende il render</span>
+<span class="cc">/bluemap start</span>
+
+<span class="cm"># Aggiorna un'area specifica intorno alla posizione X Z</span>
+<span class="cc">/bluemap render world 0 0 500</span></pre></div>
+
+    <div class="ib warn"><span class="ii">!</span>
+      <span>Il primo render completo può richiedere <strong>da minuti a ore</strong> dipendendo dalla dimensione del mondo. BlueMap usa i thread in background e non impatta il gameplay, ma consuma CPU. Considera di avviarlo di notte o quando il server è poco usato.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- ACCESSO -->
+  <div class="section"><div class="sh"><span class="sn">04</span><h2>Come accedere alla mappa</h2></div>
+    <p>Una volta che BlueMap è avviato e ha fatto almeno un po' di render, apri nel browser:</p>
+    <div class="cb"><div class="ch"><span class="cl">URL — da questo PC</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cv2">http://localhost:8100</span></pre></div>
+    <div class="cb"><div class="ch"><span class="cl">URL — da altri PC nella LAN</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cv2">http://&lt;IP-locale-del-server&gt;:8100</span>
+<span class="cm"># Esempio: http://192.168.1.100:8100</span></pre></div>
+
+    <div class="ib note"><span class="ii">i</span>
+      <span>Per ora la mappa è accessibile solo in LAN. L'esposizione pubblica via port forwarding (porta 8100 TCP) o reverse proxy (nginx/caddy per servire su un URL con dominio) la gestiamo separatamente quando sei pronto.</span>
+    </div>
+
+    <p style="margin-top:14px"><strong>Controlli nella mappa:</strong></p>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Navigazione</div>
+        <p>Click + trascina per spostare la visuale. Scroll per zoom. Click destro + trascina per ruotare e inclinare la vista 3D.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Giocatori online</div>
+        <p>I giocatori connessi appaiono sulla mappa in tempo reale con il loro nome. Puoi cliccarci sopra per vedere la posizione esatta.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--purple)"></span>Dimensioni</div>
+        <p>Nel menu laterale puoi switchare tra Overworld, Nether e End (se le hai esplorate e renderizzate).</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Modalità mappa</div>
+        <p>Puoi passare da vista 3D a vista isometrica flat dal menu. La flat è più leggera per browser datati.</p>
+      </div>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- OTTIMIZZAZIONE -->
+  <div class="section"><div class="sh"><span class="sn">05</span><h2>Ottimizzazione (server con poca RAM)</h2></div>
+    <p>BlueMap di default può usare molte risorse durante il render. Con 8GB di RAM puoi stare tranquillo, ma se noti lag durante il primo render, modifica questi parametri:</p>
+    <div class="cfile"><div class="cfn">📄 core.conf — parametri performance</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.8;background:#090b0a"><span class="cm"># Thread dedicati al render (default: dipende dalla CPU)
+# Riduci a 1-2 se il server va lento durante il render</span>
+<span class="cc">render-thread-count</span>: <span class="cv2">2</span>
+
+<span class="cm"># Quanti MB di RAM dedica al render (default: 100)
+# Aumenta se hai spazio, riduci se sei a corto di RAM</span>
+<span class="cc">scan-settings</span>:
+  <span class="cc">max-tiles-per-cycle</span>: <span class="cv2">50</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Per limitare l'area renderizzata e risparmiare spazio disco, imposta un <strong>world border</strong> in Minecraft prima di fare il render completo. BlueMap rispetta il bordo del mondo.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- PORTA -->
+  <div class="section"><div class="sh"><span class="sn">06</span><h2>Port forwarding (quando vorrai renderla pubblica)</h2></div>
+    <table>
+      <tr><th>Porta</th><th>Protocollo</th><th>Uso</th></tr>
+      <tr><td>8100</td><td>TCP</td><td>Web server BlueMap (mappa)</td></tr>
+    </table>
+    <div class="ib note" style="margin-top:12px"><span class="ii">i</span>
+      <span>Per ora lascia la porta 8100 chiusa e accessibile solo in LAN. Quando vorrai esporla pubblicamente, hai due opzioni: <strong>port forwarding diretto</strong> (semplice, ma espone l'IP) oppure <strong>reverse proxy</strong> con nginx/Caddy (permette un URL tipo <code>map.tuodominio.duckdns.org</code>). Te ne occuperemo separatamente.</span>
+    </div>
+  </div>
+
+  <footer><span>BlueMap · Paper + Fabric · 2026</span><span>Web map 3D · Porta 8100</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>
