@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Versioni MC — Guida MC</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .ver-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:24px 0; }
+  @media(max-width:580px){ .ver-grid{ grid-template-columns:1fr; } }
+
+  .ver-card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color .2s;
+  }
+  .ver-card.loading { opacity:.6; }
+  .ver-card.ok  { border-color:rgba(74,222,128,.35); }
+  .ver-card.err { border-color:rgba(251,191,36,.35); }
+
+  .ver-icon { font-size:24px; margin-bottom:10px; display:block; }
+  .ver-name { font-size:13px; font-weight:600; color:var(--muted); font-family:var(--mono); margin-bottom:6px; letter-spacing:.08em; text-transform:uppercase; }
+  .ver-value {
+    font-size:28px;
+    font-weight:800;
+    color:#fff;
+    font-family:var(--mono);
+    line-height:1.1;
+    min-height:34px;
+    display:flex;
+    align-items:center;
+  }
+  .ver-value.loading-text { color:var(--muted); font-size:18px; }
+  .ver-sub { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:6px; }
+  .ver-dot {
+    position:absolute;
+    top:14px; right:14px;
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--border);
+  }
+  .ver-card.ok  .ver-dot { background:var(--green); box-shadow:0 0 6px var(--green); }
+  .ver-card.err .ver-dot { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+  .ver-card.loading .ver-dot { background:var(--blue); animation:pulse 1s infinite; }
+
+  .refresh-bar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .last-check { font-family:var(--mono); font-size:11px; color:var(--muted); }
+
+  .btn-refresh {
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--green);
+    background:var(--green-glow);
+    border:1px solid rgba(74,222,128,.3);
+    padding:5px 14px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .btn-refresh:hover { background:rgba(74,222,128,.2); }
+  .btn-refresh:disabled { opacity:.5; cursor:not-allowed; }
+
+  .autocheck-toggle {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted);
+    cursor:pointer;
+  }
+  .toggle-sw {
+    width:32px; height:18px;
+    background:var(--border);
+    border-radius:9px;
+    position:relative;
+    transition:background .2s;
+    flex-shrink:0;
+  }
+  .toggle-sw.on { background:var(--green); }
+  .toggle-sw::after {
+    content:'';
+    position:absolute;
+    top:3px; left:3px;
+    width:12px; height:12px;
+    background:#fff;
+    border-radius:50%;
+    transition:left .2s;
+  }
+  .toggle-sw.on::after { left:17px; }
+
+  .ver-error { font-family:var(--mono); font-size:11px; color:var(--amber); margin-top:4px; }
+
+  .info-note {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:3px solid var(--blue);
+    border-radius:6px;
+    padding:14px 18px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.7;
+    margin-top:20px;
+  }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="index.html">Home</a>
+    <a class="nav-btn" href="addons/index.html">Plugin & Mod</a>
+    <a class="nav-btn active" href="versioni.html">Versioni</a>
+    <a class="nav-btn" href="glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Home</a>
+    <div class="tag">Versioni · Aggiornate dai siti ufficiali</div>
+    <h1>Versioni <span class="ag">disponibili</span></h1>
+    <p class="subtitle">// Minecraft Vanilla · Paper · Fabric Loader</p>
+  </header>
+
+  <div class="refresh-bar">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <button class="btn-refresh" id="btn-refresh" onclick="checkAll()">↻ Controlla ora</button>
+      <label class="autocheck-toggle" onclick="toggleAuto()">
+        <span class="toggle-sw" id="toggle"></span>
+        <span id="toggle-label">Auto-check all'apertura: OFF</span>
+      </label>
+    </div>
+    <span class="last-check" id="last-check">Non ancora controllato</span>
+  </div>
+
+  <div class="ver-grid">
+    <!-- VANILLA -->
+    <div class="ver-card loading" id="card-vanilla">
+      <div class="ver-dot"></div>
+      <span class="ver-icon">🌿</span>
+      <div class="ver-name">Minecraft Vanilla</div>
+      <div class="ver-value loading-text" id="val-vanilla">—</div>
+      <div class="ver-sub" id="sub-vanilla">release ufficiale</div>
+      <div class="ver-error" id="err-vanilla"></div>
+    </div>
+
+    <!-- PAPER -->
+    <div class="ver-card loading" id="card-paper">
+      <div class="ver-dot"></div>
+      <span class="ver-icon">📄</span>
+      <div class="ver-name">Paper</div>
+      <div class="ver-value loading-text" id="val-paper">—</div>
+      <div class="ver-sub" id="sub-paper">ultima build stabile</div>
+      <div class="ver-error" id="err-paper"></div>
+    </div>
+
+    <!-- FABRIC -->
+    <div class="ver-card loading" id="card-fabric">
+      <div class="ver-dot"></div>
+      <span class="ver-icon">🧵</span>
+      <div class="ver-name">Fabric Loader</div>
+      <div class="ver-value loading-text" id="val-fabric">—</div>
+      <div class="ver-sub" id="sub-fabric">versione stabile loader</div>
+      <div class="ver-error" id="err-fabric"></div>
+    </div>
+  </div>
+
+  <div class="info-note">
+    ℹ️ I dati vengono recuperati in tempo reale dai siti ufficiali:
+    <strong style="color:var(--text)">piston-meta.mojang.com</strong> (Vanilla) ·
+    <strong style="color:var(--text)">fill.papermc.io</strong> (Paper) ·
+    <strong style="color:var(--text)">meta.fabricmc.net</strong> (Fabric).<br>
+    Nota: le API di Paper richiedono un proxy CORS per essere chiamate dal browser — se il check fallisce, i dati vengono recuperati tramite un proxy pubblico.
+  </div>
+
+  <footer><span>Versioni · 2026</span><span>Aggiornate in tempo reale</span></footer>
+</div>
+
+<script>
+  // ── STATO ──────────────────────────────────────────
+  const STORAGE_KEY = 'mc_autocheck';
+  let autoCheck = localStorage.getItem(STORAGE_KEY) === 'true';
+
+  function updateToggleUI() {
+    const t = document.getElementById('toggle');
+    const l = document.getElementById('toggle-label');
+    t.className = 'toggle-sw' + (autoCheck ? ' on' : '');
+    l.textContent = 'Auto-check all\'apertura: ' + (autoCheck ? 'ON' : 'OFF');
+  }
+
+  function toggleAuto() {
+    autoCheck = !autoCheck;
+    localStorage.setItem(STORAGE_KEY, autoCheck);
+    updateToggleUI();
+  }
+
+  updateToggleUI();
+
+  // ── CARD HELPERS ────────────────────────────────────
+  function setLoading(id) {
+    const card = document.getElementById('card-' + id);
+    card.className = 'ver-card loading';
+    document.getElementById('val-' + id).textContent = '...';
+    document.getElementById('val-' + id).className = 'ver-value loading-text';
+    document.getElementById('err-' + id).textContent = '';
+  }
+
+  function setOk(id, value, sub) {
+    const card = document.getElementById('card-' + id);
+    card.className = 'ver-card ok';
+    const val = document.getElementById('val-' + id);
+    val.textContent = value;
+    val.className = 'ver-value';
+    if (sub) document.getElementById('sub-' + id).textContent = sub;
+  }
+
+  function setErr(id, msg) {
+    const card = document.getElementById('card-' + id);
+    card.className = 'ver-card err';
+    document.getElementById('val-' + id).textContent = '?';
+    document.getElementById('val-' + id).className = 'ver-value loading-text';
+    document.getElementById('err-' + id).textContent = msg;
+  }
+
+  // ── FETCH con CORS proxy di fallback ────────────────
+  async function fetchJSON(url) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return await r.json();
+    } catch {
+      // fallback con proxy CORS pubblico
+      const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+      const r2 = await fetch(proxy);
+      if (!r2.ok) throw new Error('HTTP ' + r2.status + ' (proxy)');
+      return await r2.json();
+    }
+  }
+
+  // ── CHECK VANILLA ───────────────────────────────────
+  async function checkVanilla() {
+    setLoading('vanilla');
+    try {
+      const data = await fetchJSON(
+        'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'
+      );
+      const ver = data.latest.release;
+      setOk('vanilla', ver, 'ultima release · Java 25');
+    } catch(e) {
+      setErr('vanilla', 'Errore: ' + e.message);
+    }
+  }
+
+  // ── CHECK PAPER ─────────────────────────────────────
+  async function checkPaper() {
+    setLoading('paper');
+    try {
+      // 1) Ultima versione MC supportata da Paper
+      const proj = await fetchJSON('https://fill.papermc.io/v3/projects/paper');
+      // Le versioni sono in groups, prendiamo l'ultima
+      const groups = proj.versions.edges;
+      const latestGroup = groups[0].node;
+      const mcVer = latestGroup.key;
+
+      // 2) Ultima build stabile per quella versione
+      const builds = await fetchJSON(
+        `https://fill.papermc.io/v3/projects/paper/versions/${mcVer}/builds`
+      );
+      const stable = builds.find(b => b.channel === 'STABLE');
+      const buildNum = stable ? stable.number : builds[0].number;
+
+      setOk('paper', mcVer, `build #${buildNum} · Java 21`);
+    } catch(e) {
+      setErr('paper', 'Errore: ' + e.message);
+    }
+  }
+
+  // ── CHECK FABRIC ────────────────────────────────────
+  async function checkFabric() {
+    setLoading('fabric');
+    try {
+      const loaders = await fetchJSON('https://meta.fabricmc.net/v2/versions/loader');
+      const stable = loaders.find(l => l.stable === true);
+      if (!stable) throw new Error('Nessuna versione stabile trovata');
+
+      // Ultima versione MC stabile supportata da Fabric
+      const games = await fetchJSON('https://meta.fabricmc.net/v2/versions/game');
+      const latestMC = games.find(g => g.stable === true);
+
+      setOk(
+        'fabric',
+        stable.version,
+        `loader stabile · MC ${latestMC ? latestMC.version : '?'}`
+      );
+    } catch(e) {
+      setErr('fabric', 'Errore: ' + e.message);
+    }
+  }
+
+  // ── CHECK ALL ───────────────────────────────────────
+  async function checkAll() {
+    const btn = document.getElementById('btn-refresh');
+    btn.disabled = true;
+    btn.textContent = '↻ Controllo...';
+
+    await Promise.all([checkVanilla(), checkPaper(), checkFabric()]);
+
+    const now = new Date();
+    document.getElementById('last-check').textContent =
+      'Ultimo controllo: ' + now.toLocaleTimeString('it-IT');
+
+    btn.disabled = false;
+    btn.textContent = '↻ Controlla ora';
+  }
+
+  // ── AVVIO ───────────────────────────────────────────
+  if (autoCheck) {
+    checkAll();
+  }
+</script>
+</body>
+</html>

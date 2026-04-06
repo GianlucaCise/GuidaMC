@@ -4,6 +4,7 @@ GuidaMC/
 ├── style.css           ← Stile
 ├── shared.js           ← Script/Funzionamento
 ├── glossario.html      ← Glossario completo
+├── versioni.html       ← Ultima versione MC Vanilla, Paper, Fabric
 ├── server/
 │   ├── vanilla-crafty.html
 │   ├── vanilla-systemd.html
@@ -14,5 +15,6 @@ GuidaMC/
 └── addons/
     ├── index.html      ← Hub Plugin & Mod
     ├── discord-bridge.html
+    ├── bluemap.html
     └── geyser.html
 ```
