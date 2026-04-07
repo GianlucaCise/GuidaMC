@@ -181,9 +181,9 @@
   <div class="info-note">
     ℹ️ I dati vengono recuperati in tempo reale dai siti ufficiali:
     <strong style="color:var(--text)">piston-meta.mojang.com</strong> (Vanilla) ·
-    <strong style="color:var(--text)">fill.papermc.io</strong> (Paper) ·
+    <strong style="color:var(--text)">api.papermc.io/v2</strong> (Paper) ·
     <strong style="color:var(--text)">meta.fabricmc.net</strong> (Fabric).<br>
-    Nota: le API di Paper richiedono un proxy CORS per essere chiamate dal browser — se il check fallisce, i dati vengono recuperati tramite un proxy pubblico.
+    Se il check fallisce, i dati vengono recuperati tramite un proxy CORS pubblico come fallback.
   </div>
 
   <footer><span>Versioni · 2026</span><span>Aggiornate in tempo reale</span></footer>
@@ -268,19 +268,27 @@
   async function checkPaper() {
     setLoading('paper');
     try {
-      // 1) Ultima versione MC supportata da Paper
-      const proj = await fetchJSON('https://fill.papermc.io/v3/projects/paper');
-      // Le versioni sono in groups, prendiamo l'ultima
-      const groups = proj.versions.edges;
-      const latestGroup = groups[0].node;
-      const mcVer = latestGroup.key;
+      // Usa l'API v2 (più semplice da chiamare dal browser, attiva fino a luglio 2026)
+      const proj = await fetchJSON('https://api.papermc.io/v2/projects/paper');
 
-      // 2) Ultima build stabile per quella versione
-      const builds = await fetchJSON(
-        `https://fill.papermc.io/v3/projects/paper/versions/${mcVer}/builds`
+      // Le versioni sono in un array semplice, l'ultima è alla fine
+      const versions = proj.versions;
+      if (!versions || versions.length === 0) throw new Error('Nessuna versione trovata');
+
+      // Cerca l'ultima versione stabile (senza "-pre", "-rc", "snapshot" nel nome)
+      const stableVers = versions.filter(v =>
+        !v.includes('-pre') && !v.includes('-rc') && !v.includes('snapshot')
       );
-      const stable = builds.find(b => b.channel === 'STABLE');
-      const buildNum = stable ? stable.number : builds[0].number;
+      const mcVer = stableVers.length > 0
+        ? stableVers[stableVers.length - 1]
+        : versions[versions.length - 1];
+
+      // Ultima build per quella versione
+      const verData = await fetchJSON(
+        `https://api.papermc.io/v2/projects/paper/versions/${mcVer}`
+      );
+      const builds = verData.builds || [];
+      const buildNum = builds.length > 0 ? builds[builds.length - 1] : '?';
 
       setOk('paper', mcVer, `build #${buildNum} · Java 21`);
     } catch(e) {
