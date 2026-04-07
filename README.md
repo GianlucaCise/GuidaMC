@@ -16,5 +16,6 @@ GuidaMC/
     ├── index.html      ← Hub Plugin & Mod
     ├── discord-bridge.html
     ├── bluemap.html
+    ├── dynmap.html
     └── geyser.html
 ```
