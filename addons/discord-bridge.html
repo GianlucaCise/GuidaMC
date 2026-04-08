@@ -108,68 +108,72 @@ DiscordChatChannelGameDeathEventsEnabled: <span class="cv2">true</span></pre></d
   </div><div class="divider"></div>
 
   <!-- FABRIC -->
-  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Fabric — AMCDB (mod)</h2></div>
-    <p>AMCDB è leggero, server-side only e stabile. Scarica da <strong>modrinth.com/mod/amcdb</strong>. Richiede <strong>Fabric API</strong>.</p>
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Fabric — Discord-MC-Chat / DMCC (mod)</h2></div>
+    <p>Discord-MC-Chat (DMCC) è la mod consigliata per Fabric: feature-rich, ben documentata, supporta già <strong>26.1</strong>. Scarica da <strong>modrinth.com/mod/discord-mc-chat</strong>. Richiede <strong>Fabric API</strong>.</p>
     <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
-      <pre><span class="cc">sudo cp</span> <span class="cpa">~/amcdb-x.x.x.jar /opt/mcserver/fabric/mods/</span>
-<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/amcdb-x.x.x.jar</span>
-<span class="cm"># Prima avviata — genera il config (va in crash, è normale)</span>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/discord-mc-chat-x.x.x.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/discord-mc-chat-x.x.x.jar</span>
+<span class="cm"># Avvia il server per generare il config, poi fermalo</span>
 <span class="cc">sudo systemctl start mcserver.service</span>
 <span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
 
-    <div class="ib note"><span class="ii">i</span><span>Il primo avvio con AMCDB va in crash perché manca il config — è atteso. Il file viene creato, poi lo compili e riavvii.</span></div>
+    <p style="margin-top:14px">Apri <code>config/Discord-MC-Chat/config.json</code>:</p>
+    <div class="cfile"><div class="cfn">📄 config/Discord-MC-Chat/config.json — righe chiave</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a">{
+  <span class="cm">// Token del bot Discord</span>
+  <span class="cc">"botToken"</span>: <span class="cv2">"IL_TUO_TOKEN_QUI"</span>,
 
-    <p style="margin-top:14px">Apri <code>config/amcdb.properties</code>:</p>
-    <div class="cfile"><div class="cfn">📄 config/amcdb.properties — righe chiave</div>
-      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a"><span class="cm"># Token del bot Discord</span>
-amcdb.discord.token=<span class="cv2">IL_TUO_TOKEN_QUI</span>
+  <span class="cm">// ID del canale chat</span>
+  <span class="cc">"channelId"</span>: <span class="cv2">"ID_CANALE_QUI"</span>,
 
-<span class="cm"># ID del canale chat</span>
-amcdb.discord.chat.channel=<span class="cv2">ID_CANALE_QUI</span>
+  <span class="cm">// (Opzionale) ID canale console — solo tu devi poter scrivere lì!</span>
+  <span class="cc">"logChannelId"</span>: <span class="cv2">"ID_CANALE_CONSOLE"</span>,
 
-<span class="cm"># (Opzionale) Canale console</span>
-amcdb.discord.console.channel=<span class="cv2">ID_CANALE_CONSOLE</span>
+  <span class="cm">// Abilita/disabilita notifiche morte e avanzamenti</span>
+  <span class="cc">"broadcastDeathMessages"</span>: <span class="cv2">true</span>,
+  <span class="cc">"broadcastAdvancementMessages"</span>: <span class="cv2">true</span>
+}</pre></div>
 
-<span class="cm"># Abilita esecuzione comandi dal canale console (default: false)</span>
-amcdb.discord.channels.console.enableExecution=<span class="cv2">false</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. Usa <code>/dmcc reload</code> in-game per ricaricare il config senza riavviare.</span></div>
+    <div class="ib warn"><span class="ii">!</span><span>Se abiliti il canale console, assicurati che solo tu possa scrivere in quel canale Discord — DMCC può eseguire comandi server da Discord.</span></div>
 
-    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. AMCDB lavora off-thread — impatto sulle performance praticamente zero.</span></div>
-    <div class="ib warn"><span class="ii">!</span><span>Se abiliti <code>enableExecution=true</code>, assicurati che solo tu possa scrivere nel canale console Discord.</span></div>
+    <div class="ib note" style="margin-top:10px"><span class="ii">i</span>
+      <span><strong>Alternativa più semplice: AMCDB</strong> — se DMCC ti sembra troppo elaborato, esiste anche <strong>A Minecraft Discord Bridge</strong> (<code>modrinth.com/mod/amcdb</code>): zero config extra, funziona in 2 minuti, ma ha meno feature (niente comandi Discord, niente multi-server). Per un gruppo di amici è più che sufficiente.</span>
+    </div>
   </div><div class="divider"></div>
 
   <!-- CONFRONTO -->
-  <div class="section"><div class="sh"><span class="sn">03</span><h2>Differenze tra DiscordSRV e AMCDB</h2></div>
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Differenze tra DiscordSRV e DMCC</h2></div>
 
     <p>La distinzione principale non è solo la lista di feature — è il <strong>pubblico a cui si rivolgono</strong>.</p>
 
     <div class="mods-grid" style="margin-bottom:16px">
       <div class="mod-card">
         <div class="mod-card-title"><span class="mod-dot" style="background:#5865f2"></span>DiscordSRV — potente e configurabile</div>
-        <p>È il bridge più completo per Paper. Pensato per server con una community: supporta il <strong>link account</strong> (ogni giocatore può collegare il proprio account Discord al proprio account MC), la <strong>sincronizzazione dei ruoli</strong> Discord con i gruppi in-game, webhook personalizzati per ogni canale, e un sistema di alert configurabile per quasi ogni evento del server. La configurazione è più articolata ma ha una documentazione ottima. Per un piccolo server tra amici è un po' "overkill", ma funziona benissimo anche in quel contesto.</p>
+        <p>Il bridge più completo per Paper. Supporta <strong>link account</strong> (ogni giocatore collega il proprio Discord al proprio MC), <strong>sincronizzazione ruoli</strong>, webhook personalizzati e alert per quasi ogni evento server. Configurazione più articolata ma documentazione ottima. Per un piccolo server tra amici è un po' "overkill", ma funziona benissimo.</p>
       </div>
       <div class="mod-card">
-        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>AMCDB — leggero e diretto</div>
-        <p>Pensato per chi vuole il bridge funzionante in 5 minuti senza toccare decine di opzioni. Non usa mixins (non modifica il codice di Minecraft direttamente), quindi è molto stabile tra una versione MC e l'altra. Tutto il lavoro viene fatto <strong>off-thread</strong> — zero impatto sulle performance del server. Manca il link account e la sincronizzazione ruoli, ma per un gruppo di amici non servono.</p>
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>DMCC — feature-rich per Fabric</div>
+        <p>La scelta principale per Fabric. Supporta multi-server, comandi Discord (<code>/whitelist</code>, <code>/console</code>, <code>/stop</code>), webhook, emoji, menzioni, stato del server nel topic del canale. Già aggiornato a <strong>26.1</strong>. Richiede un po' più di config rispetto ad AMCDB ma in cambio dà molte più opzioni.</p>
       </div>
     </div>
 
     <table>
-      <tr><th>Feature</th><th>DiscordSRV (Paper)</th><th>AMCDB (Fabric)</th></tr>
+      <tr><th>Feature</th><th>DiscordSRV (Paper)</th><th>DMCC (Fabric)</th></tr>
       <tr><td>Chat bidirezionale</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
       <tr><td>Notifiche morte / avanzamento</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
       <tr><td>Canale console su Discord</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
       <tr><td>Webhook (messaggi formattati)</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
+      <tr><td>Comandi da Discord (/whitelist, /console…)</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
       <tr><td>Link account Discord ↔ MC</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
       <tr><td>Sincronizzazione ruoli Discord</td><td style="color:var(--green)">✓</td><td style="color:var(--muted)">✗</td></tr>
-      <tr><td>Configurazione</td><td style="color:var(--amber)">articolata</td><td style="color:var(--green)">semplice</td></tr>
-      <tr><td>Impatto performance</td><td style="color:var(--amber)">basso</td><td style="color:var(--green)">quasi zero (off-thread)</td></tr>
-      <tr><td>Stabilità tra versioni MC</td><td style="color:var(--amber)">buona</td><td style="color:var(--green)">ottima (no mixins)</td></tr>
-      <tr><td>Server-side only</td><td style="color:var(--green)">✓</td><td style="color:var(--green)">✓</td></tr>
-      <tr><td>Supporta 26.1</td><td style="color:var(--amber)">quando Paper supporterà 26.1</td><td style="color:var(--green)">✓ già ora</td></tr>
+      <tr><td>Supporto 26.1</td><td style="color:var(--amber)">quando Paper supporterà 26.1</td><td style="color:var(--green)">✓ già ora</td></tr>
+      <tr><td>Configurazione</td><td style="color:var(--amber)">articolata</td><td style="color:var(--amber)">media</td></tr>
+      <tr><td>Alternativa più semplice</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">AMCDB (minimalista)</td></tr>
     </table>
 
     <div class="ib tip" style="margin-top:14px"><span class="ii">✓</span>
-      <span><strong>Per un server tra amici:</strong> entrambi vanno benissimo. Se usi Fabric scegli AMCDB, se usi Paper scegli DiscordSRV — non c'è un motivo valido per fare il contrario dato che sono ottimizzati per le rispettive piattaforme.</span>
+      <span><strong>Per un server tra amici:</strong> se usi Paper scegli DiscordSRV, se usi Fabric scegli DMCC (o AMCDB se vuoi qualcosa di ancora più immediato). Non c'è un motivo valido per fare il contrario.</span>
     </div>
 
     <div class="divider"></div>
