@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Chat Discord Bridge — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn active" href="index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../versioni.html">Versioni</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Plugin & Mod</a>
+    <div class="tag">Simple Voice Chat · Discord Bridge · Paper + Fabric</div>
+    <h1>Bridge voce<br><span class="ag">Simple Voice Chat</span> ↔ Discord</h1>
+    <p class="subtitle">// Voce di prossimità in-game · Collegata a un canale vocale Discord</p>
+  </header>
+
+  <!-- PANORAMICA -->
+  <div class="section"><div class="sh"><span class="sn">00</span><h2>Come funziona il sistema</h2></div>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Simple Voice Chat</div>
+        <p>Mod/plugin che aggiunge la <strong>chat vocale di prossimità</strong> a Minecraft: i giocatori si sentono solo se sono abbastanza vicini in-game. Richiede installazione sia sul server che sul client di ogni giocatore che vuole usare la voce.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:#5865f2"></span>Simple Voice Chat Discord Bridge</div>
+        <p>Addon che collega Simple Voice Chat a un <strong>canale vocale Discord</strong>. Permette a chi non ha il client Minecraft (o usa Bedrock via Geyser) di sentire e parlare con i giocatori in-game tramite Discord. Funziona tramite bot Discord che entrano nel canale vocale.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Limitazione importante</div>
+        <p>Ogni bot Discord gestisce <strong>un solo utente alla volta</strong> nel canale vocale. Se vuoi che 3 persone Discord si colleghino contemporaneamente, devi creare e configurare <strong>3 bot separati</strong>. Per un piccolo gruppo, 1-2 bot sono generalmente sufficienti.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>Versioni supportate</div>
+        <p>Supporta Paper, Fabric e Purpur fino a Minecraft <strong>1.21.x</strong>. Non ancora aggiornato a 26.1 — tieni d'occhio la pagina Modrinth per aggiornamenti.</p>
+      </div>
+    </div>
+
+    <div class="ib note" style="margin-top:14px"><span class="ii">i</span>
+      <span><strong>Porta UDP extra:</strong> Simple Voice Chat usa una porta UDP separata per l'audio (default <strong>24454</strong>). Se vuoi usarlo fuori dalla LAN, dovrai aprirla sul router oltre alla 25565. Per ora in LAN non serve nulla di extra.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- STEP 0 — PREREQUISITI -->
+  <div class="section"><div class="sh"><span class="sn a">00</span><h2>Prerequisiti — installa Simple Voice Chat</h2></div>
+    <p>Il bridge richiede che <strong>Simple Voice Chat</strong> sia già installato e funzionante sul server. Installalo prima di procedere.</p>
+
+    <div class="mods-grid" style="margin-bottom:14px">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Paper (plugin)</div>
+        <p>Scarica da <strong>modrinth.com/mod/simple-voice-chat</strong> la versione <strong>Bukkit/Paper</strong>. Mettila in <code>plugins/</code>.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--pink)"></span>Fabric (mod)</div>
+        <p>Scarica da <strong>modrinth.com/mod/simple-voice-chat</strong> la versione <strong>Fabric</strong>. Mettila in <code>mods/</code>. Richiede <strong>Fabric API</strong>.</p>
+      </div>
+    </div>
+
+    <div class="ib warn"><span class="ii">!</span>
+      <span>Simple Voice Chat deve essere installato anche sul <strong>client di ogni giocatore</strong> che vuole usare la voce in-game. Chi non lo installa può comunque giocare normalmente, ma non sentirà né parlerà via voice chat in-game (potrà però usare il bridge Discord).</span>
+    </div>
+
+    <p style="margin-top:14px">Avvia il server una volta con Simple Voice Chat per generare il suo config, poi fermalo. Verifica che nella console compaia qualcosa tipo <code>[VoiceChat] Voice chat server started</code>.</p>
+  </div><div class="divider"></div>
+
+  <!-- STEP 1 — BOT DISCORD -->
+  <div class="section"><div class="sh"><span class="sn">01</span><h2>Crea i bot Discord</h2></div>
+    <p>Serve <strong>un bot per ogni persona Discord</strong> che vuole connettersi contemporaneamente. Per iniziare, crea almeno un bot.</p>
+
+    <p><strong>1. Vai al Developer Portal</strong></p>
+    <div class="cb"><div class="ch"><span class="cl">URL</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cv2">https://discord.com/developers/applications</span></pre></div>
+
+    <p style="margin-top:14px"><strong>2. Crea una nuova applicazione</strong><br>
+    Clicca <strong>New Application</strong> → dagli un nome (es. <code>MC Voice 1</code>) → Create.</p>
+
+    <p style="margin-top:14px"><strong>3. Configura il bot</strong></p>
+    <div class="mods-grid" style="margin-bottom:14px">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Copia il token</div>
+        <p>Menu a sinistra → <strong>Bot</strong> → <strong>Reset Token</strong> → copia il token. Salvalo — ti servirà nel config.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Disabilita Public Bot</div>
+        <p>Sempre nella tab Bot, scorri in basso e <strong>disabilita "Public Bot"</strong> — così nessun altro potrà invitare il tuo bot in altri server.</p>
+      </div>
+    </div>
+
+    <p><strong>4. Prendi l'Application ID e genera il link di invito</strong><br>
+    Menu a sinistra → <strong>General Information</strong> → copia l'<strong>Application ID</strong>.<br>
+    Poi apri questo URL nel browser, sostituendo l'ID:</p>
+    <div class="cb"><div class="ch"><span class="cl">URL invito bot — sostituisci YOUR_APP_ID</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cv2">https://discord.com/api/oauth2/authorize?client_id=YOUR_APP_ID&permissions=36700160&scope=bot</span></pre></div>
+    <p>Seleziona il tuo server Discord → Autorizza. <strong>Non disabilitare nessun permesso.</strong></p>
+
+    <p style="margin-top:14px"><strong>5. Copia l'ID del canale vocale Discord</strong><br>
+    In Discord: Impostazioni → App → <strong>Modalità sviluppatore</strong> → attiva. Poi tasto destro sul <strong>canale vocale</strong> che vuoi usare come bridge → <strong>Copia ID canale</strong>.</p>
+
+    <div class="ib warn"><span class="ii">!</span>
+      <span>Nel canale vocale Discord non possono esserci due persone che parlano contemporaneamente o ci saranno glitch audio. Imposta il <strong>limite utenti del canale a 2</strong> (1 bot + 1 persona Discord) per evitare problemi.</span>
+    </div>
+
+    <div class="ib note"><span class="ii">i</span>
+      <span>Se vuoi più di una persona Discord connessa contemporaneamente, ripeti questi step per ogni bot aggiuntivo — crea un'app separata e un canale vocale separato per ognuno.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- STEP 2 — INSTALLAZIONE -->
+  <div class="section"><div class="sh"><span class="sn b">02</span><h2>Installazione — Paper (plugin)</h2></div>
+    <p>Scarica da <strong>modrinth.com/plugin/simple-voice-chat-discord-bridge</strong> la versione Paper/Bukkit.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/voicechat-discord.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/voicechat-discord.jar</span>
+<span class="cm"># Avvia per generare il config</span>
+<span class="cc">sudo systemctl restart mcserver.service</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <p style="margin-top:14px">Apri <code>plugins/voicechat-discord/config.yml</code>:</p>
+    <div class="cfile"><div class="cfn">📄 plugins/voicechat-discord/config.yml</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a">bots:
+    <span class="cm"># Bot 1 — un bot per ogni persona Discord simultanea</span>
+    - token: <span class="cv2">IL_TUO_TOKEN_BOT_1</span>
+      vc_id: <span class="cv2">ID_CANALE_VOCALE_1</span>
+
+    <span class="cm"># Bot 2 (opzionale — aggiungi altri se vuoi più utenti simultanei)</span>
+    <span class="cm"># - token: IL_TUO_TOKEN_BOT_2</span>
+    <span class="cm">#   vc_id: ID_CANALE_VOCALE_2</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Riavvia il server. I bot appariranno online nel tuo server Discord.</span></div>
+  </div><div class="divider"></div>
+
+  <div class="section"><div class="sh"><span class="sn p">03</span><h2>Installazione — Fabric (mod)</h2></div>
+    <p>Scarica da <strong>modrinth.com/plugin/simple-voice-chat-discord-bridge</strong> la versione Fabric. Richiede <strong>Fabric API</strong> e ovviamente <strong>Simple Voice Chat Fabric</strong>.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/voicechat-discord-fabric.jar /opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/voicechat-discord-fabric.jar</span>
+<span class="cc">sudo systemctl restart mcserver.service</span>
+<span class="cc">sudo systemctl stop mcserver.service</span></pre></div>
+
+    <p style="margin-top:14px">Il config per Fabric è in <code>config/voicechat-discord.yml</code> — identico al Paper:</p>
+    <div class="cfile"><div class="cfn">📄 config/voicechat-discord.yml</div>
+      <pre style="padding:13px;font-family:var(--mono);font-size:13px;line-height:1.9;background:#090b0a">bots:
+    - token: <span class="cv2">IL_TUO_TOKEN_BOT_1</span>
+      vc_id: <span class="cv2">ID_CANALE_VOCALE_1</span></pre></div>
+  </div><div class="divider"></div>
+
+  <!-- STEP 3 — USO IN-GAME -->
+  <div class="section"><div class="sh"><span class="sn">04</span><h2>Uso in-game</h2></div>
+    <p>Una volta configurato, i giocatori in-game usano questi comandi per avviare/fermare una sessione vocale con Discord:</p>
+    <div class="cb"><div class="ch"><span class="cl">Console / in-game</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Avvia una sessione vocale — il bot entra nel canale Discord</span>
+<span class="cc">/dvc start</span>
+
+<span class="cm"># Ferma la sessione — il bot esce dal canale Discord</span>
+<span class="cc">/dvc stop</span>
+
+<span class="cm"># Lista dei gruppi vocali disponibili</span>
+<span class="cc">/dvc group list</span>
+
+<span class="cm"># Crea un gruppo vocale privato</span>
+<span class="cc">/dvc group create</span> <span class="cv2">NomeGruppo</span></pre></div>
+
+    <p style="margin-top:14px"><strong>Procedura per l'utente Discord:</strong></p>
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Step 1 — giocatore in-game</div>
+        <p>Il giocatore in-game digita <code>/dvc start</code>. Il bot del server entra automaticamente nel canale vocale Discord configurato.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:#5865f2"></span>Step 2 — utente Discord</div>
+        <p>L'utente Discord entra nello stesso canale vocale dove è entrato il bot. Ora può sentire e parlare con il giocatore in-game in tempo reale.</p>
+      </div>
+    </div>
+
+    <div class="ib note"><span class="ii">i</span>
+      <span>Il bot resta nel canale vocale finché il giocatore non usa <code>/dvc stop</code> o non esce dal server. Se il server si riavvia, il bot esce automaticamente.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- PORTA -->
+  <div class="section"><div class="sh"><span class="sn">05</span><h2>Porte necessarie</h2></div>
+    <table>
+      <tr><th>Porta</th><th>Protocollo</th><th>Uso</th></tr>
+      <tr><td>25565</td><td>TCP</td><td>Server Minecraft (già aperta)</td></tr>
+      <tr><td>24454</td><td><strong>UDP</strong></td><td>Simple Voice Chat (se vuoi usarlo fuori LAN)</td></tr>
+    </table>
+    <div class="ib note" style="margin-top:12px"><span class="ii">i</span>
+      <span>Il bridge Discord non richiede porte aggiuntive — il bot Discord usa le connessioni in uscita verso i server Discord. Solo la porta UDP 24454 di Simple Voice Chat è rilevante, e solo se vuoi che i giocatori Java si connettano da fuori LAN con la voce in-game.</span>
+    </div>
+  </div>
+
+  <footer><span>Simple Voice Chat Discord Bridge · Paper + Fabric · 2026</span><span>Porta UDP 24454 · 1.21.x</span></footer>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>
