@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap">
+  <link rel="preload" as="style" href="../style.css">
+<title>LuckPerms — Permessi — Guida MC</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .perm-node {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(96,165,250,.08);
+    border: 1px solid rgba(96,165,250,.25);
+    color: var(--blue);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 0;
+  }
+  .perm-node.green { background: var(--green-glow); border-color: rgba(74,222,128,.25); color: var(--green); }
+  .perm-node.amber { background: rgba(251,191,36,.08); border-color: rgba(251,191,36,.25); color: var(--amber); }
+  .group-schema {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 14px 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 2;
+  }
+  .gs-row { display: flex; align-items: center; gap: 10px; }
+  .gs-arrow { color: var(--muted); }
+  .gs-name { font-weight: 700; color: #fff; }
+  .gs-desc { color: var(--muted); font-size: 11px; }
+  .gs-badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-logo" href="../index.html">⛏ MC<span>/guide</span></a>
+  <div class="nav-btns">
+    <a class="nav-btn" href="../index.html">Home</a>
+    <a class="nav-btn active" href="index.html">Plugin & Mod</a>
+    <a class="nav-btn" href="../versioni.html">Versioni</a>
+    <a class="nav-btn" href="../glossario.html">Glossario</a>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:48px">
+  <header class="gh">
+    <a class="back-btn" href="index.html">← Plugin & Mod</a>
+    <div class="tag">LuckPerms · Gestione Permessi · Paper + Fabric</div>
+    <h1>Gestione permessi<br><span class="ag">LuckPerms</span></h1>
+    <p class="subtitle">// Gruppi · Permessi granulari · No OP ai giocatori</p>
+  </header>
+
+  <!-- PANORAMICA -->
+  <div class="section"><div class="sh"><span class="sn">00</span><h2>Il problema e la soluzione</h2></div>
+    <p>Su Minecraft vanilla, per dare a un giocatore accesso a un comando (es. <code>/time set day</code>) devi renderlo OP — e un OP ha accesso a <em>tutto</em>, incluso cancellare il mondo o kickare chiunque. LuckPerms risolve questo creando <strong>gruppi con permessi specifici</strong>: puoi dare a un amico solo i comandi che vuoi, nessuno di più.</p>
+
+    <div class="mods-grid">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Come funziona</div>
+        <p>Crei dei <strong>gruppi</strong> (es. <code>default</code>, <code>amico</code>, <code>admin</code>), assegni permessi ai gruppi, e metti ogni giocatore nel gruppo corretto. Se un giocatore è in <code>amico</code>, eredita tutti i permessi di <code>amico</code> — e se <code>amico</code> eredita da <code>default</code>, anche quelli.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Paper vs Fabric</div>
+        <p>Su <strong>Paper</strong> i comandi vanilla hanno già i loro nodi permesso — LuckPerms da solo basta. Su <strong>Fabric</strong> i comandi vanilla non hanno nodi nativi: serve installare anche <strong>VanillaPermissions</strong> che li aggiunge.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--purple)"></span>Web editor</div>
+        <p>LuckPerms include un editor web a cui accedi con <code>/lp editor</code> — ti dà un link da aprire nel browser. Gestisci tutto da interfaccia grafica, poi premi <em>Save</em> e incolla il comando generato nella console. Zero comandi a memoria.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Supporto versioni</div>
+        <p>LuckPerms supporta Paper e Fabric su tutte le versioni recenti, inclusa <strong>26.1</strong> (aggiornato il 26 marzo 2026). Server-side only — i client non devono installare nulla.</p>
+      </div>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- INSTALLAZIONE -->
+  <div class="section"><div class="sh"><span class="sn b">01</span><h2>Installazione — Paper</h2></div>
+    <p>Scarica il JAR da <strong>modrinth.com/plugin/luckperms</strong> (versione Bukkit/Paper) o da <strong>luckperms.net</strong>.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">sudo cp</span> <span class="cpa">~/LuckPerms-Bukkit.jar /opt/mcserver/paper/plugins/</span>
+<span class="cc">sudo chown mcserver:mcserver</span> <span class="cpa">/opt/mcserver/paper/plugins/LuckPerms-Bukkit.jar</span>
+<span class="cc">sudo systemctl restart mcserver.service</span></pre></div>
+    <div class="ib tip"><span class="ii">✓</span><span>Su Paper i comandi vanilla hanno già i nodi permesso integrati — non serve nient'altro. LuckPerms da solo basta.</span></div>
+  </div>
+
+  <div class="section"><div class="sh"><span class="sn p">02</span><h2>Installazione — Fabric</h2></div>
+    <p>Su Fabric servono <strong>due</strong> mod: LuckPerms e VanillaPermissions. La prima gestisce i gruppi, la seconda espone i comandi vanilla come nodi permesso.</p>
+    <div class="cb"><div class="ch"><span class="cl">bash</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># LuckPerms — da modrinth.com/plugin/luckperms (versione Fabric)</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/LuckPerms-Fabric.jar /opt/mcserver/fabric/mods/</span>
+
+<span class="cm"># VanillaPermissions — da modrinth.com/mod/vanilla-permissions</span>
+<span class="cc">sudo cp</span> <span class="cpa">~/VanillaPermissions.jar /opt/mcserver/fabric/mods/</span>
+
+<span class="cc">sudo chown -R mcserver:mcserver</span> <span class="cpa">/opt/mcserver/fabric/mods/</span>
+<span class="cc">sudo systemctl restart mcserver.service</span></pre></div>
+
+    <div class="ib note"><span class="ii">i</span>
+      <span>VanillaPermissions espone ogni comando vanilla nel formato <span class="perm-node">minecraft.command.&lt;comando&gt;</span> — ad esempio <span class="perm-node">minecraft.command.time</span> per <code>/time</code>. Per dare accesso completo a un comando usa il wildcard <span class="perm-node">minecraft.command.time.*</span>.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- STRUTTURA GRUPPI -->
+  <div class="section"><div class="sh"><span class="sn">03</span><h2>Pianifica la struttura dei gruppi</h2></div>
+    <p>Prima di creare i gruppi, pianifica chi fa cosa. Per un server tra amici una struttura semplice come questa è più che sufficiente:</p>
+
+    <div class="group-schema">
+      <div class="gs-row">
+        <span class="gs-name" style="color:var(--green)">default</span>
+        <span class="gs-desc">— tutti i giocatori, permessi base (chat, /spawn, /home)</span>
+      </div>
+      <div class="gs-row" style="padding-left:20px">
+        <span class="gs-arrow">↑ eredita</span>
+      </div>
+      <div class="gs-row">
+        <span class="gs-name" style="color:var(--blue)">amico</span>
+        <span class="gs-desc">— amici fidati, comandi extra (/time, /weather, /tpa…)</span>
+      </div>
+      <div class="gs-row" style="padding-left:20px">
+        <span class="gs-arrow">↑ eredita</span>
+      </div>
+      <div class="gs-row">
+        <span class="gs-name" style="color:var(--amber)">admin</span>
+        <span class="gs-desc">— tu, accesso completo (rimani OP + LuckPerms admin)</span>
+      </div>
+    </div>
+
+    <div class="ib note"><span class="ii">i</span><span>L'ereditarietà funziona verso l'alto: <code>amico</code> ha tutti i permessi di <code>default</code> più i suoi. <code>admin</code> ha tutto di entrambi. Non devi duplicare i permessi.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- METODO A: WEB EDITOR -->
+  <div class="section"><div class="sh"><span class="sn">04</span><h2>Metodo A — Web editor (consigliato)</h2></div>
+    <p>Il modo più semplice per gestire LuckPerms è il web editor. Apri la sessione dalla console del server o in-game da admin:</p>
+    <div class="cb"><div class="ch"><span class="cl">Console / in-game</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cc">/lp editor</span></pre></div>
+
+    <p style="margin-top:10px">LuckPerms stampa un link nella console (es. <code>https://luckperms.net/editor/...</code>). Aprilo nel browser — si apre l'editor grafico. Da qui puoi:</p>
+    <div class="mods-grid" style="margin:14px 0">
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--green)"></span>Creare gruppi</div>
+        <p>Clicca il <strong>+</strong> accanto a "Groups" nella barra sinistra. Dai un nome al gruppo (es. <code>amico</code>).</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--blue)"></span>Aggiungere permessi</div>
+        <p>Seleziona un gruppo → tab "Permissions" → scrivi il nodo permesso → clicca il <strong>+</strong>. Puoi aggiungerne quanti vuoi prima di salvare.</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--purple)"></span>Impostare ereditarietà</div>
+        <p>Seleziona un gruppo → tab "Parents" → aggiungi il gruppo da cui ereditare (es. <code>amico</code> eredita da <code>default</code>).</p>
+      </div>
+      <div class="mod-card">
+        <div class="mod-card-title"><span class="mod-dot" style="background:var(--amber)"></span>Salvare</div>
+        <p>Clicca <strong>Save</strong> in alto a destra → l'editor genera un comando. Copiaincollalo nella console del server. Le modifiche sono attive immediatamente.</p>
+      </div>
+    </div>
+    <div class="ib tip"><span class="ii">✓</span><span>Puoi fare tutte le modifiche che vuoi nell'editor e applicarle in un colpo solo con un singolo comando. Non devi salvare ad ogni modifica.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- METODO B: COMANDI -->
+  <div class="section"><div class="sh"><span class="sn">05</span><h2>Metodo B — Comandi da console</h2></div>
+    <p>Se preferisci usare la console direttamente, ecco i comandi per replicare la struttura <code>default → amico → admin</code>:</p>
+
+    <div class="cb"><div class="ch"><span class="cl">Console — crea i gruppi</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Crea i gruppi (default esiste già)</span>
+<span class="cc">lp creategroup</span> <span class="cv2">amico</span>
+<span class="cc">lp creategroup</span> <span class="cv2">admin</span>
+
+<span class="cm"># Imposta il peso (priorità) — numero più alto = priorità maggiore</span>
+<span class="cc">lp group</span> <span class="cv2">default</span> <span class="cf2">setweight</span> <span class="cv2">10</span>
+<span class="cc">lp group</span> <span class="cv2">amico</span>   <span class="cf2">setweight</span> <span class="cv2">50</span>
+<span class="cc">lp group</span> <span class="cv2">admin</span>   <span class="cf2">setweight</span> <span class="cv2">100</span>
+
+<span class="cm"># Ereditarietà: amico eredita da default, admin da amico</span>
+<span class="cc">lp group</span> <span class="cv2">amico</span> <span class="cf2">parent add</span> <span class="cv2">default</span>
+<span class="cc">lp group</span> <span class="cv2">admin</span> <span class="cf2">parent add</span> <span class="cv2">amico</span></pre></div>
+
+    <div class="cb"><div class="ch"><span class="cl">Console — aggiungi permessi ai gruppi</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Gruppo default — permessi base (esempi)</span>
+<span class="cc">lp group default permission set</span> <span class="cv2">minecraft.command.me true</span>
+<span class="cc">lp group default permission set</span> <span class="cv2">minecraft.command.msg true</span>
+
+<span class="cm"># Gruppo amico — comandi extra</span>
+<span class="cc">lp group amico permission set</span> <span class="cv2">minecraft.command.time true</span>
+<span class="cc">lp group amico permission set</span> <span class="cv2">minecraft.command.weather true</span>
+<span class="cc">lp group amico permission set</span> <span class="cv2">minecraft.command.gamemode true</span>
+<span class="cc">lp group amico permission set</span> <span class="cv2">minecraft.command.gamemode.survival true</span>
+<span class="cc">lp group amico permission set</span> <span class="cv2">minecraft.command.gamemode.adventure true</span>
+
+<span class="cm"># Per negare esplicitamente un permesso — usa false</span>
+<span class="cc">lp group default permission set</span> <span class="cv2">minecraft.command.op false</span></pre></div>
+
+    <div class="cb"><div class="ch"><span class="cl">Console — assegna giocatori ai gruppi</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Metti un giocatore in un gruppo</span>
+<span class="cc">lp user</span> <span class="cv2">NomeGiocatore</span> <span class="cf2">parent set</span> <span class="cv2">amico</span>
+
+<span class="cm"># Controlla in quale gruppo è un giocatore</span>
+<span class="cc">lp user</span> <span class="cv2">NomeGiocatore</span> <span class="cf2">info</span>
+
+<span class="cm"># Rimuovi un giocatore da un gruppo (torna a default)</span>
+<span class="cc">lp user</span> <span class="cv2">NomeGiocatore</span> <span class="cf2">parent remove</span> <span class="cv2">amico</span></pre></div>
+
+    <div class="ib note"><span class="ii">i</span><span>In console ometti il <code>/</code> davanti ai comandi. In-game da admin metti <code>/lp</code> invece di <code>lp</code>.</span></div>
+  </div><div class="divider"></div>
+
+  <!-- NODI PERMESSO COMUNI -->
+  <div class="section"><div class="sh"><span class="sn">06</span><h2>Nodi permesso — riferimento rapido</h2></div>
+    <p>I nodi seguono sempre il formato <span class="perm-node">minecraft.command.&lt;comando&gt;</span> su Fabric con VanillaPermissions, e lo stesso formato su Paper. Il wildcard <code>.*</code> alla fine dà accesso a tutti i sottocomandi.</p>
+
+    <table>
+      <tr><th>Comando</th><th>Nodo permesso</th><th>Note</th></tr>
+      <tr><td>/time set</td><td><span class="perm-node green">minecraft.command.time.*</span></td><td>giorno/notte/ora</td></tr>
+      <tr><td>/weather</td><td><span class="perm-node green">minecraft.command.weather.*</span></td><td>pioggia/sereno/tuono</td></tr>
+      <tr><td>/gamemode survival</td><td><span class="perm-node green">minecraft.command.gamemode.survival</span></td><td>solo survival, non creative</td></tr>
+      <tr><td>/gamemode (tutti)</td><td><span class="perm-node green">minecraft.command.gamemode.*</span></td><td>tutti i modi incluso creative</td></tr>
+      <tr><td>/tp</td><td><span class="perm-node green">minecraft.command.teleport.*</span></td><td>teleport a coordinate o giocatori</td></tr>
+      <tr><td>/give</td><td><span class="perm-node amber">minecraft.command.give.*</span></td><td>⚠ darebbe poteri enormi, usa con cura</td></tr>
+      <tr><td>/kill</td><td><span class="perm-node amber">minecraft.command.kill.*</span></td><td>⚠ può killare altri giocatori</td></tr>
+      <tr><td>/ban</td><td><span class="perm-node amber">minecraft.command.ban.*</span></td><td>solo per admin fidati</td></tr>
+      <tr><td>/kick</td><td><span class="perm-node amber">minecraft.command.kick.*</span></td><td>solo per admin fidati</td></tr>
+      <tr><td>/gamerule</td><td><span class="perm-node amber">minecraft.command.gamerule.*</span></td><td>⚠ può disabilitare danni ecc.</td></tr>
+      <tr><td>/me</td><td><span class="perm-node green">minecraft.command.me</span></td><td>messaggi narrativi in chat</td></tr>
+      <tr><td>/msg</td><td><span class="perm-node green">minecraft.command.msg.*</span></td><td>messaggi privati</td></tr>
+      <tr><td>/seed</td><td><span class="perm-node green">minecraft.command.seed</span></td><td>mostra il seed del mondo</td></tr>
+    </table>
+
+    <div class="ib warn" style="margin-top:14px"><span class="ii">!</span>
+      <span>Su Paper il formato dei nodi è lo stesso (<span class="perm-node">minecraft.command.time</span> ecc.) ma dipende anche dai plugin installati — ogni plugin ha i propri nodi documentati nella sua pagina. Controlla sempre la documentazione del plugin specifico.</span>
+    </div>
+  </div><div class="divider"></div>
+
+  <!-- COMANDI UTILI -->
+  <div class="section"><div class="sh"><span class="sn">07</span><h2>Comandi di controllo e debug</h2></div>
+    <div class="cb"><div class="ch"><span class="cl">Console / in-game</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># Apri il web editor (genera link)</span>
+<span class="cc">lp editor</span>
+
+<span class="cm"># Lista di tutti i gruppi esistenti</span>
+<span class="cc">lp listgroups</span>
+
+<span class="cm"># Info e permessi di un gruppo</span>
+<span class="cc">lp group</span> <span class="cv2">amico</span> <span class="cf2">info</span>
+<span class="cc">lp group</span> <span class="cv2">amico</span> <span class="cf2">permission info</span>
+
+<span class="cm"># Controlla se un giocatore ha un permesso specifico</span>
+<span class="cc">lp user</span> <span class="cv2">NomeGiocatore</span> <span class="cf2">permission check</span> <span class="cv2">minecraft.command.time</span>
+
+<span class="cm"># Tutti i permessi di un giocatore (compresi quelli ereditati)</span>
+<span class="cc">lp user</span> <span class="cv2">NomeGiocatore</span> <span class="cf2">permission info</span>
+
+<span class="cm"># Ricarica LuckPerms (dopo modifiche manuali ai file)</span>
+<span class="cc">lp reload</span></pre></div>
+  </div><div class="divider"></div>
+
+  <!-- SETUP TIPICO -->
+  <div class="section"><div class="sh"><span class="sn">08</span><h2>Setup rapido — esempio completo per un server tra amici</h2></div>
+    <p>Incolla questi comandi in sequenza nella console per avere una configurazione funzionante in un minuto:</p>
+    <div class="cb"><div class="ch"><span class="cl">Console — setup completo</span><button class="cp-btn" onclick="cc(this)">copy</button></div>
+      <pre><span class="cm"># 1. Crea i gruppi e imposta l'ereditarietà</span>
+<span class="cc">lp creategroup</span> <span class="cv2">amico</span>
+<span class="cc">lp creategroup</span> <span class="cv2">admin</span>
+<span class="cc">lp group amico parent add</span> <span class="cv2">default</span>
+<span class="cc">lp group admin parent add</span> <span class="cv2">amico</span>
+<span class="cc">lp group default setweight</span> <span class="cv2">10</span>
+<span class="cc">lp group amico setweight</span> <span class="cv2">50</span>
+<span class="cc">lp group admin setweight</span> <span class="cv2">100</span>
+
+<span class="cm"># 2. Permessi gruppo amico</span>
+<span class="cc">lp group amico permission set minecraft.command.time.*</span> <span class="cv2">true</span>
+<span class="cc">lp group amico permission set minecraft.command.weather.*</span> <span class="cv2">true</span>
+<span class="cc">lp group amico permission set minecraft.command.gamemode.survival</span> <span class="cv2">true</span>
+<span class="cc">lp group amico permission set minecraft.command.gamemode.adventure</span> <span class="cv2">true</span>
+<span class="cc">lp group amico permission set minecraft.command.msg.*</span> <span class="cv2">true</span>
+<span class="cc">lp group amico permission set minecraft.command.me</span> <span class="cv2">true</span>
+
+<span class="cm"># 3. Assegna i giocatori — sostituisci con i nomi reali</span>
+<span class="cc">lp user</span> <span class="cv2">Amico1</span> <span class="cf2">parent set amico</span>
+<span class="cc">lp user</span> <span class="cv2">Amico2</span> <span class="cf2">parent set amico</span>
+<span class="cc">lp user</span> <span class="cv2">TuoNome</span> <span class="cf2">parent set admin</span></pre></div>
+
+    <div class="ib tip"><span class="ii">✓</span><span>Dopo aver assegnato i giocatori ai gruppi puoi togliere l'OP agli amici con <code>deop NomeGiocatore</code> dalla console. Mantieni l'OP solo per te.</span></div>
+  </div>
+
+  <footer><span>LuckPerms · VanillaPermissions · Paper + Fabric · 2026</span><span>Permessi granulari · No OP</span></footer>
+</div>
+<script src="../shared.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("../sw.js")
+      .then(r => console.log("[SW] registrato", r.scope))
+      .catch(e => console.warn("[SW] errore:", e));
+  });
+}
+</script>
+</body>
+</html>
