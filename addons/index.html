@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap">
+  <link rel="preload" as="style" href="../style.css">
 <title>Plugin & Mod — Guida MC</title>
 <link rel="stylesheet" href="../style.css">
 </head>
@@ -75,6 +79,16 @@
       <p class="ic-desc">Collega Simple Voice Chat (voce di prossimità in-game) a un canale vocale Discord. Permette a chi non ha Minecraft di sentire e parlare con i giocatori in-game.</p>
       <div class="ic-tags"><span class="ic-tag">Simple Voice Chat</span><span class="ic-tag">Discord Bridge</span><span class="ic-tag">Paper + Fabric</span></div>
     </a>
+
+    <a href="luckperms.html" class="info-card">
+      <div class="ic-header">
+        <span class="ic-dot" style="background:var(--green)"></span>
+        <span class="ic-name">Gestione permessi</span>
+        <span class="ic-type sv">guida →</span>
+      </div>
+      <p class="ic-desc">Dai agli amici solo i comandi che vuoi senza renderli OP. Crea gruppi con permessi specifici. Web editor grafico incluso.</p>
+      <div class="ic-tags"><span class="ic-tag">LuckPerms</span><span class="ic-tag">VanillaPermissions</span><span class="ic-tag">Paper + Fabric</span></div>
+    </a>
   </div>
 
   <div class="ib note" style="margin-top:20px"><span class="ii">i</span>
@@ -84,5 +98,14 @@
   <footer><span>Plugin & Mod · 2026</span><span>Paper · Fabric · Linux Mint 22.3</span></footer>
 </div>
 <script src="../shared.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("../sw.js")
+      .then(r => console.log("[SW] registrato", r.scope))
+      .catch(e => console.warn("[SW] errore:", e));
+  });
+}
+</script>
 </body>
 </html>
