@@ -1,0 +1,29 @@
+name: Sync main to dev
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: main
+          destination_branch: dev
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "🔄 Sync main → dev"
+          pr_body: "Automated sync from main"
